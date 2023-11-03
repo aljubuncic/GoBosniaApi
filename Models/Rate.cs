@@ -1,8 +1,8 @@
 ﻿namespace GoTravnikApi.Models
 {
-    public class Rating
+    public class Rate
     {
         public int Id { get; set; }
-        public int Value { get; set; }
+       
     }
 }

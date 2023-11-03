@@ -8,6 +8,8 @@
         public DateTime startDate { get; set; }
         public DateTime endDate { get; set; }
         
-        
+        public Location Location { get; set; }
+
+        //nema rating naravno
     }
 }
