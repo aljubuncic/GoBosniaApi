@@ -1,14 +1,32 @@
-﻿namespace GoTravnikApi.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace GoTravnikApi.Models
 {
-    public class Accommodation
+    public class Accommodation : TouristContent
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string Type { get; set; }
+        [ForeignKey("Rating")]
+        public int IdRating { get; set; }
         public Rating Rating { get; set; }
+        public string Website { get; set; }
+        public string TelephoneNumber { get; set; }
 
-        public Location Location { get; set; }
+        public Accommodation()
+        {
+        }
 
+        public Accommodation(int id, string name, string description, string type, int idRating, Rating rating, int idLocation, Location location, string image, string website, string telephoneNumber)
+        {
+            Id = id;
+            Name = name;
+            Description = description;
+            IdRating = idRating;
+            Rating = rating;
+            IdLocation = idLocation;
+            Location = location;
+            Image = image;
+            Website = website;
+            TelephoneNumber = telephoneNumber;
+        }
     }
 }
