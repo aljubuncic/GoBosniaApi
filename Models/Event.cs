@@ -1,15 +1,28 @@
-﻿namespace GoTravnikApi.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+
+namespace GoTravnikApi.Models
 {
-    public class Event
+    public class Event : TouristContent
     {
-        public int Id { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
         public DateTime startDate { get; set; }
         public DateTime endDate { get; set; }
-        
-        public Location Location { get; set; }
 
-        //nema rating naravno
+        public Event()
+        {
+        }
+
+        public Event(int id, string name, string description, string type, int idLocation, Location location, string image, DateTime startDate, DateTime endDate)
+        {
+            Id = id;
+            Name = name;
+            Description = description;
+            IdLocation = idLocation;
+            Location = location;
+            Image = image;
+            this.startDate = startDate;
+            this.endDate = endDate;
+        }
+        
     }
 }
