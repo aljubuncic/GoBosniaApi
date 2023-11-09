@@ -15,7 +15,6 @@ namespace GoTravnikApi.Controllers
                 new Event
                 {
                     Id = 1,
-                    Title = "Test",
                     Description = "Test",
                 }
             };
