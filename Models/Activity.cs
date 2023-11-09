@@ -10,7 +10,7 @@ namespace GoTravnikApi.Models
         {
         }
 
-        public Activity(int id, string name, string description, string type, int idLocation, Location location, string image)
+        public Activity(int id, string name, string description, int idLocation, Location location, string image)
         {
             Id = id;
             Name = name;

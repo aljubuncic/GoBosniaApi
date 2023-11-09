@@ -1,12 +1,24 @@
-﻿namespace GoTravnikApi.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+
+namespace GoTravnikApi.Models
 {
-    public class Attraction
+    public class Attraction : TouristContent
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string Type { get; set; }
-        public Location Location { get; set; }
-        public Rating Rating { get; set; }
+        
+
+        public Attraction()
+        {
+        }
+
+        public Attraction(int id, string name, string description, string type, int idLocation, Location location, string image)
+        {
+            Id = id;
+            Name = name;
+            Description = description;
+            IdLocation = idLocation;
+            Location = location;
+            Image = image;
+        }
     }
 }
