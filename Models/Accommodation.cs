@@ -5,9 +5,6 @@ namespace GoTravnikApi.Models
 {
     public class Accommodation : TouristContent
     {
-        [ForeignKey("IdRating")]
-        public int IdRating { get; set; }
-        public Rating Rating { get; set; }
         public string Website { get; set; }
         public string TelephoneNumber { get; set; }
 
@@ -20,8 +17,6 @@ namespace GoTravnikApi.Models
             Id = id;
             Name = name;
             Description = description;
-            IdRating = idRating;
-            Rating = rating;
             IdLocation = idLocation;
             Location = location;
             Image = image;
