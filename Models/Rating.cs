@@ -10,5 +10,16 @@ namespace GoTravnikApi.Models
         [ForeignKey("TouristContent")]
         public int IdTouristContent { get; set;}
         public TouristContent TouristContent { get; set;}
+
+        public Rating() { }
+
+        public Rating(int id, int value, string textComment, int idTouristContent, TouristContent touristContent)
+        {
+            Id = id;
+            Value = value;
+            TextComment = textComment;
+            IdTouristContent = idTouristContent;
+            TouristContent = touristContent;
+        }
     }
 }

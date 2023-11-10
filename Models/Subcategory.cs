@@ -14,5 +14,15 @@ namespace GoTravnikApi.Models
         public int IdTouristContent {  get; set; }
 
         public TouristContent TouristContent { get; set; }
+
+        public Subcategory() { }
+
+        public Subcategory(int id, string name, int idTouristContent, TouristContent touristContent)
+        {
+            Id = id;
+            Name = name;
+            IdTouristContent = idTouristContent;
+            TouristContent = touristContent;
+        }
     }
 }
