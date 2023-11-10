@@ -5,7 +5,7 @@ namespace GoTravnikApi.Models
 {
     public class Accommodation : TouristContent
     {
-        [ForeignKey("Rating")]
+        [ForeignKey("IdRating")]
         public int IdRating { get; set; }
         public Rating Rating { get; set; }
         public string Website { get; set; }

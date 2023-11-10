@@ -10,7 +10,7 @@ namespace GoTravnikApi.Models
         public string Name { get; set; }
         public string Description { get; set; }
 
-        [ForeignKey("Location")]
+        [ForeignKey("IdLocation")]
         public int IdLocation { get; set; }
 
         public Location Location { get; set; }
