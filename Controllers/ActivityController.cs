@@ -27,7 +27,7 @@ namespace GoTravnikApi.Controllers
             return Ok(events);
         }
 
-        [HttpGet("{attractionId}")]
+        [HttpGet("{activityId}")]
         [ProducesResponseType(200, Type = typeof(Activity))]
         [ProducesResponseType(404)]
         public async Task<ActionResult<Event>> GetActivity(int activityId)
