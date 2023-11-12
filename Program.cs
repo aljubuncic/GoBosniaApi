@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<IAccommodationRepository, AccommodationRepository>();    
+builder.Services.AddScoped<IActivityRepository, ActivityRepository>();
 builder.Services.AddControllers();
 builder.Services.AddDbContext<DataContext>(options =>
 {
