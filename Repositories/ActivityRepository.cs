@@ -26,5 +26,10 @@ namespace GoTravnikApi.Repository
         {
             return await _dataContext.Activity.ToListAsync();
         }
+
+        public async Task<List<Activity>> GetActivities(string searchName)
+        {
+            return await _dataContext.Activity.Where(a => a.Name.ToLower().Contains(searchName.ToLower())).ToListAsync();
+        }
     }
 }
