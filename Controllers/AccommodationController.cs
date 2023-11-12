@@ -28,9 +28,9 @@ namespace GoTravnikApi.Controllers
         }
 
         [HttpGet("{accommodationId}")]
-        [ProducesResponseType(200, Type = typeof(Event))]
+        [ProducesResponseType(200, Type = typeof(Accommodation))]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<Event>> GetEvent(int accommodationId)
+        public async Task<ActionResult<Event>> GetAccommodation(int accommodationId)
         {
             if (!await _accommodationRepository.AccomodationExists(accommodationId))
                 return NotFound(ModelState);

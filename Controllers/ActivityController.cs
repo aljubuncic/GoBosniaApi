@@ -16,8 +16,8 @@ namespace GoTravnikApi.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(List<Accommodation>))]
-        public async Task<ActionResult<List<Accommodation>>> GetAccommodations()
+        [ProducesResponseType(200, Type = typeof(List<Activity>))]
+        public async Task<ActionResult<List<Activity>>> GetActivities()
         {
             var events = await _activityRepository.GetActivities();
 
@@ -27,10 +27,10 @@ namespace GoTravnikApi.Controllers
             return Ok(events);
         }
 
-        [HttpGet("{activityId}")]
-        [ProducesResponseType(200, Type = typeof(Event))]
+        [HttpGet("{attractionId}")]
+        [ProducesResponseType(200, Type = typeof(Activity))]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<Event>> GetEvent(int activityId)
+        public async Task<ActionResult<Event>> GetActivity(int activityId)
         {
             if (!await _activityRepository.ActivityExists(activityId))
                 return NotFound(ModelState);
