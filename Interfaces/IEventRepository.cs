@@ -5,6 +5,7 @@ namespace GoTravnikApi.Interfaces
     public interface IEventRepository
     {
         public Task<List<Event>> GetEvents();
+        public Task<List<Event>> GetEvents(string searchName);
 
         public Task<Event> GetEvent(int id);
 

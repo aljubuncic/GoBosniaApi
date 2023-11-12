@@ -33,6 +33,9 @@ namespace GoTravnikApi.Repository
             return await _dataContext.Event.Where(e => e.startDate >= startDate && e.endDate <= endDate).ToListAsync();
         }
 
-        
+        public async Task<List<Event>> GetEvents(string searchName)
+        {
+            return await _dataContext.Event.Where(a => a.Name.ToLower().Contains(searchName.ToLower())).ToListAsync();
+        }
     }
 }

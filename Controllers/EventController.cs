@@ -1,6 +1,7 @@
 ﻿using GoTravnikApi.Data;
 using GoTravnikApi.Interfaces;
 using GoTravnikApi.Models;
+using GoTravnikApi.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,14 +28,26 @@ namespace GoTravnikApi.Controllers
             return Ok(events);
         }
 
-        [HttpGet("{eventId}")]
+        [HttpGet("{id:int}")]
         [ProducesResponseType(200, Type = typeof(Event))]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<Event>> GetEvent(int eventId)
+        public async Task<ActionResult<Event>> GetEvent(int id)
         {
-            if(!await _eventRepository.EventExists(eventId)) 
+            if(!await _eventRepository.EventExists(id)) 
                 return NotFound(ModelState);
-            var events = await _eventRepository.GetEvent(eventId);
+            var events = await _eventRepository.GetEvent(id);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(events);
+        }
+
+        [HttpGet("{name}")]
+        [ProducesResponseType(200, Type = typeof(List<Event>))]
+        public async Task<ActionResult<List<Event>>> GetEvents(string name)
+        {
+            var events = await _eventRepository.GetEvents(name);
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
