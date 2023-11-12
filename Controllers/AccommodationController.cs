@@ -30,7 +30,7 @@ namespace GoTravnikApi.Controllers
         [HttpGet("{accommodationId}")]
         [ProducesResponseType(200, Type = typeof(Accommodation))]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<Event>> GetAccommodation(int accommodationId)
+        public async Task<ActionResult<Accommodation>> GetAccommodation(int accommodationId)
         {
             if (!await _accommodationRepository.AccomodationExists(accommodationId))
                 return NotFound(ModelState);

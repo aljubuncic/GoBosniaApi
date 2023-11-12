@@ -29,7 +29,7 @@ namespace GoTravnikApi.Controllers
         [HttpGet("{attractionId}")]
         [ProducesResponseType(200, Type = typeof(Attraction))]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<Event>> GetEvent(int attractionId)
+        public async Task<ActionResult<Activity>> GetActivity(int attractionId)
         {
             if (!await _attractionRepository.AttractionExists(attractionId))
                 return NotFound(ModelState);

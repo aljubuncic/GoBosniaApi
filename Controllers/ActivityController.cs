@@ -30,7 +30,7 @@ namespace GoTravnikApi.Controllers
         [HttpGet("{activityId}")]
         [ProducesResponseType(200, Type = typeof(Activity))]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<Event>> GetActivity(int activityId)
+        public async Task<ActionResult<Activity>> GetActivity(int activityId)
         {
             if (!await _activityRepository.ActivityExists(activityId))
                 return NotFound(ModelState);
