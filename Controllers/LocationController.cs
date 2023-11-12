@@ -16,7 +16,7 @@ namespace GoTravnikApi.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(204)]
+        [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public async Task<ActionResult> AddLocation([FromBody] Location location)
         {
