@@ -27,19 +27,31 @@ namespace GoTravnikApi.Controllers
             return Ok(events);
         }
 
-        [HttpGet("{accommodationId}")]
+        [HttpGet("{id:int}")]
         [ProducesResponseType(200, Type = typeof(Accommodation))]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<Accommodation>> GetAccommodation(int accommodationId)
+        public async Task<ActionResult<Accommodation>> GetAccommodation(int id)
         {
-            if (!await _accommodationRepository.AccomodationExists(accommodationId))
+            if (!await _accommodationRepository.AccomodationExists(id))
                 return NotFound(ModelState);
-            var events = await _accommodationRepository.GetAccommodation(accommodationId);
+            var events = await _accommodationRepository.GetAccommodation(id);
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             return Ok(events);
+        }
+
+        [HttpGet("{name}")]
+        [ProducesResponseType(200, Type = typeof(List<Accommodation>))]
+        public async Task<ActionResult<List<Accommodation>>> GetAccommodations(string name)
+        {
+            var accommodations = await _accommodationRepository.GetAccomodations(name);
+
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(accommodations);
         }
     }
 }

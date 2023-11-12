@@ -26,5 +26,10 @@ namespace GoTravnikApi.Repository
         {
             return await _dataContext.Accomodation.ToListAsync();
         }
+
+        public async Task<List<Accommodation>> GetAccomodations(string searchName)
+        {
+            return await _dataContext.Accomodation.Where(a => a.Name.ToLower().Contains(searchName.ToLower())).ToListAsync();
+        }
     }
 }
