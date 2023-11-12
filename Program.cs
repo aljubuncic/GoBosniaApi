@@ -1,5 +1,6 @@
 using GoTravnikApi.Data;
 using GoTravnikApi.Interfaces;
+using GoTravnikApi.Repositories;
 using GoTravnikApi.Repository;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<IAccommodationRepository, AccommodationRepository>();    
 builder.Services.AddScoped<IActivityRepository, ActivityRepository>();
+builder.Services.AddScoped<IAttractionRepository, AttractionRepository>();
+builder.Services.AddScoped<IFoodAndDrinkRepository, FoodAndDrinkRepository>();
 builder.Services.AddControllers();
 builder.Services.AddDbContext<DataContext>(options =>
 {
