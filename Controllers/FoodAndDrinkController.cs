@@ -1,5 +1,6 @@
 ﻿using GoTravnikApi.Interfaces;
 using GoTravnikApi.Models;
+using GoTravnikApi.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,19 +28,31 @@ namespace GoTravnikApi.Controllers
             return Ok(events);
         }
 
-        [HttpGet("{foodAndDrinkId}")]
+        [HttpGet("{id:int}")]
         [ProducesResponseType(200, Type = typeof(FoodAndDrink))]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<FoodAndDrink>> GetFoodAndDrink(int foodAndDrinkId)
+        public async Task<ActionResult<FoodAndDrink>> GetFoodAndDrink(int id)
         {
-            if (!await _foodAndDrinkRepository.FoodAndDrinkExists(foodAndDrinkId))
+            if (!await _foodAndDrinkRepository.FoodAndDrinkExists(id))
                 return NotFound(ModelState);
-            var events = await _foodAndDrinkRepository.GetFoodAndDrink(foodAndDrinkId);
+            var foodAndDrinks = await _foodAndDrinkRepository.GetFoodAndDrink(id);
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return Ok(events);
+            return Ok(foodAndDrinks);
+        }
+
+        [HttpGet("{name}")]
+        [ProducesResponseType(200, Type = typeof(List<FoodAndDrink>))]
+        public async Task<ActionResult<List<FoodAndDrink>>> GetFoodAndDrinks(string name)
+        {
+            var foodAndDrinks = await _foodAndDrinkRepository.GetFoodAndDrinks(name);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(foodAndDrinks);
         }
     }
 }

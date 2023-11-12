@@ -26,5 +26,10 @@ namespace GoTravnikApi.Repositories
         {
             return await _dataContext.FoodAndDrink.ToListAsync();
         }
+
+        public async Task<List<FoodAndDrink>> GetFoodAndDrinks(string searchName)
+        {
+            return await _dataContext.FoodAndDrink.Where(a => a.Name.ToLower().Contains(searchName.ToLower())).ToListAsync();
+        }
     }
 }
