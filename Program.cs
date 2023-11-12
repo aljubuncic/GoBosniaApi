@@ -1,10 +1,13 @@
 using GoTravnikApi.Data;
+using GoTravnikApi.Interfaces;
+using GoTravnikApi.Repository;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddControllers();
 builder.Services.AddDbContext<DataContext>(options =>
 {
