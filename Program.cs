@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddScoped<IEventRepository, EventRepository>();
+builder.Services.AddScoped<IAccommodationRepository, AccommodationRepository>();    
 builder.Services.AddControllers();
 builder.Services.AddDbContext<DataContext>(options =>
 {
