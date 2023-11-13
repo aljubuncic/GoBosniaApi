@@ -10,19 +10,12 @@ namespace GoTravnikApi.Models
         public int Id { get; set; }
         public string Name { get; set; }
 
-        [ForeignKey("IdTouristContent")]
-        public int IdTouristContent {  get; set; }
-
-        public TouristContent TouristContent { get; set; }
-
         public Subcategory() { }
 
-        public Subcategory(int id, string name, int idTouristContent, TouristContent touristContent)
+        public Subcategory(int id, string name)
         {
             Id = id;
             Name = name;
-            IdTouristContent = idTouristContent;
-            TouristContent = touristContent;
         }
     }
 }

@@ -14,12 +14,11 @@ namespace GoTravnikApi.Models
         {
         }
 
-        public FoodAndDrink(int id, string name, string description, string type, int idLocation, Location location, string image, string website, string telephoneNumber)
+        public FoodAndDrink(int id, string name, string description, string type, Location location, string image, string website, string telephoneNumber)
         {
             Id = id;
             Name = name;
             Description = description;
-            IdLocation = idLocation;
             Location = location;
             Image = image;
             Website = website;

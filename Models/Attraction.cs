@@ -11,12 +11,11 @@ namespace GoTravnikApi.Models
         {
         }
 
-        public Attraction(int id, string name, string description, string type, int idLocation, Location location, string image)
+        public Attraction(int id, string name, string description, string type, Location location, string image)
         {
             Id = id;
             Name = name;
             Description = description;
-            IdLocation = idLocation;
             Location = location;
             Image = image;
         }

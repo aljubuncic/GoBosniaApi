@@ -12,12 +12,11 @@ namespace GoTravnikApi.Models
         {
         }
 
-        public Event(int id, string name, string description, string type, int idLocation, Location location, string image, DateTime startDate, DateTime endDate)
+        public Event(int id, string name, string description, string type, Location location, string image, DateTime startDate, DateTime endDate)
         {
             Id = id;
             Name = name;
             Description = description;
-            IdLocation = idLocation;
             Location = location;
             Image = image;
             this.startDate = startDate;
