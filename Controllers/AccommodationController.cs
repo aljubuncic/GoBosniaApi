@@ -53,5 +53,29 @@ namespace GoTravnikApi.Controllers
 
             return Ok(accommodations);
         }
+
+        [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<ActionResult> AddAccommodation([FromBody] Accommodation accommodation)
+        {
+            if(accommodation == null)
+                return BadRequest(ModelState);
+
+            if (accommodation.Location == null)
+                return BadRequest(ModelState);
+
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!await _accommodationRepository.AddAccommodation(accommodation))
+            {
+                ModelState.AddModelError("error", "Database saving error");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok(accommodation);
+
+        }
     }
 }
