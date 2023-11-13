@@ -10,9 +10,11 @@ namespace GoTravnikApi.Controllers
     public class AccommodationController : Controller
     {
         private readonly IAccommodationRepository _accommodationRepository;
-        public AccommodationController(IAccommodationRepository accommodationRepository)
+        private readonly ISubcategoryRepository _subcategoryRepository;
+        public AccommodationController(IAccommodationRepository accommodationRepository, ISubcategoryRepository subcategoryRepository)
         {
             _accommodationRepository = accommodationRepository;
+            _subcategoryRepository = subcategoryRepository;
         }
 
         [HttpGet]
@@ -65,6 +67,13 @@ namespace GoTravnikApi.Controllers
             if (accommodation.Location == null)
                 return BadRequest(ModelState);
 
+            
+            if(!await _subcategoryRepository.SubcategoriesExist(accommodation.Subcategories))
+            {
+                ModelState.AddModelError("error", "Subcategory does not exist in the database");
+                return StatusCode(442, ModelState);
+            }
+                
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
 
