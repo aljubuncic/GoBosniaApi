@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GoTravnikApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20231113170340_FirstMigration")]
+    [Migration("20231113193750_FirstMigration")]
     partial class FirstMigration
     {
         /// <inheritdoc />
