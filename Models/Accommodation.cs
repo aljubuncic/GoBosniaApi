@@ -26,7 +26,6 @@ namespace GoTravnikApi.Models
             Website = accommodationDto.Website;
             TelephoneNumber = accommodationDto.TelephoneNumber;
             Ratings = accommodationDto.Ratings;
-            touristContentSubcategories = new List<TouristContentSubcategory>();
         }
 
         public Accommodation(int id, string name, string description, string type, int idRating, Rating rating, Location location, string image, string website, string telephoneNumber)

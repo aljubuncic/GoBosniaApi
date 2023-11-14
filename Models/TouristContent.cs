@@ -11,7 +11,7 @@ namespace GoTravnikApi.Models
         public string Description { get; set; }
         public Location Location { get; set; }
         public string Image { get; set; }
-        public List<TouristContentSubcategory> touristContentSubcategories { get; set; }
+        public List<Subcategory> Subcategories{ get; set; }
         public List<Rating> Ratings { get; set; }
     }
 }
