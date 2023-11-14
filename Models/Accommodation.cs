@@ -10,8 +10,6 @@ namespace GoTravnikApi.Models
         public string Website { get; set; }
         public string TelephoneNumber { get; set; }
 
-        public List<Subcategory> SubCategoryList { get; set; } = null;
-
         public Accommodation()
         {
         }
