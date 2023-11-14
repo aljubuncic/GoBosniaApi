@@ -1,4 +1,5 @@
-﻿using GoTravnikApi.Interfaces;
+﻿using GoTravnikApi.Dto;
+using GoTravnikApi.Interfaces;
 using GoTravnikApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -59,16 +60,23 @@ namespace GoTravnikApi.Controllers
         [HttpPost]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult> AddAccommodation([FromBody] Accommodation accommodation)
+        public async Task<ActionResult> AddAccommodation([FromBody] AccommodationDto accommodationDto)
         {
-            if(accommodation == null)
+            if(accommodationDto == null)
                 return BadRequest(ModelState);
 
-            if (accommodation.Location == null)
+            if (accommodationDto.Location == null)
                 return BadRequest(ModelState);
 
-            
-            if(!await _subcategoryRepository.SubcategoriesExist(accommodation.Subcategories))
+            List<Subcategory> subcategories = new List<Subcategory>();
+
+            foreach(var subcategoryDto in accommodationDto.Subcategories)
+            {
+                var subcategory = new Subcategory(subcategoryDto);
+                subcategories.Add(subcategory);
+            }
+
+            if(!await _subcategoryRepository.SubcategoriesExist(subcategories))
             {
                 ModelState.AddModelError("error", "Subcategory does not exist in the database");
                 return StatusCode(442, ModelState);
@@ -77,13 +85,15 @@ namespace GoTravnikApi.Controllers
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if (!await _accommodationRepository.AddAccommodation(accommodation))
+            Accommodation accommodation =new Accommodation(accommodationDto);
+
+            if (!await _accommodationRepository.AddAccommodation(accommodation, subcategories))
             {
                 ModelState.AddModelError("error", "Database saving error");
                 return StatusCode(500, ModelState);
             }
 
-            return Ok(accommodation);
+            return Ok("Succesfully created");
 
         }
     }

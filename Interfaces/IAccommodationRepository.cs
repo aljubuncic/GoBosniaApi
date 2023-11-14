@@ -9,7 +9,7 @@ namespace GoTravnikApi.Interfaces
         public Task<Accommodation> GetAccommodation(int id);
         public Task<bool> AccomodationExists(int id);
 
-        public Task<bool> AddAccommodation(Accommodation accommodation);
+        public Task<bool> AddAccommodation(Accommodation accommodation, List<Subcategory> subcategories);
 
         public Task<bool> Save();
     }

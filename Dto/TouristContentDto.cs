@@ -1,19 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using GoTravnikApi.Models;
 
-namespace GoTravnikApi.Models
+namespace GoTravnikApi.Dto
 {
-    public abstract class TouristContent
+    public abstract class TouristContentDto
     {
-        [Key]
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public Location Location { get; set; }
         public string Image { get; set; }
-        public List<TouristContentSubcategory> touristContentSubcategories { get; set; }
+        public List<SubcategoryDto> Subcategories { get; set; }
         public List<Rating> Ratings { get; set; }
     }
 }
-
-
