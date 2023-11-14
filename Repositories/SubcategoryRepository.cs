@@ -13,10 +13,10 @@ namespace GoTravnikApi.Repositories
         {
             _dataContext = dataContext; 
         }
-        public async Task<bool> SubcategoriesExist(List<Subcategory> subcategories)
+        public async Task<bool> SubcategoriesExist(List<string> subcategoryNames)
         {
-            foreach(var subcategory in subcategories)
-                if(! await _dataContext.Subcategory.AnyAsync(s => s.Name.Equals(subcategory.Name)))
+            foreach(var subcategoryName in subcategoryNames)
+                if(! await _dataContext.Subcategory.AnyAsync(s => s.Name.Equals(subcategoryName)))
                     return false;
             return true;
         }
@@ -31,6 +31,11 @@ namespace GoTravnikApi.Repositories
         {
             var saved = await _dataContext.SaveChangesAsync();
             return saved > 0;
+        }
+
+        public async Task<Subcategory> GetSubcategory(string name)
+        {
+            return await _dataContext.Subcategory.Where(x => x.Name.Equals(name)).FirstOrDefaultAsync();
         }
     }
 }
