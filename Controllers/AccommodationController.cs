@@ -68,27 +68,27 @@ namespace GoTravnikApi.Controllers
             if (accommodationDto.Location == null)
                 return BadRequest(ModelState);
 
-            List<Subcategory> subcategories = new List<Subcategory>();
-
-            foreach(var subcategoryDto in accommodationDto.Subcategories)
-            {
-                var subcategory = new Subcategory(subcategoryDto);
-                subcategories.Add(subcategory);
-            }
-
-            if(!await _subcategoryRepository.SubcategoriesExist(subcategories))
+            if(!await _subcategoryRepository.SubcategoriesExist(accommodationDto.Subcategories.Select(x => x.Name).ToList()))
             {
                 ModelState.AddModelError("error", "Subcategory does not exist in the database");
-                return StatusCode(442, ModelState);
+                return StatusCode(400, ModelState);
             }
                 
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            Accommodation accommodation =new Accommodation(accommodationDto);
+            List<Subcategory> subcategories = new List<Subcategory>();
 
-            if (!await _accommodationRepository.AddAccommodation(accommodation, subcategories))
+            foreach(var subcategoryDto in accommodationDto.Subcategories)
             {
+                var subcategory = await _subcategoryRepository.GetSubcategory(subcategoryDto.Name);
+                subcategories.Add(subcategory);
+            }
+            Accommodation accommodation = new Accommodation(accommodationDto);
+            accommodation.Subcategories = subcategories;
+
+            if (!await _accommodationRepository.AddAccommodation(accommodation))
+            { 
                 ModelState.AddModelError("error", "Database saving error");
                 return StatusCode(500, ModelState);
             }
