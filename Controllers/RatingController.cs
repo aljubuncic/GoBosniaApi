@@ -32,11 +32,11 @@ namespace GoTravnikApi.Controllers
             {
                 var touristContent = await _touristContentRepository.GetTouristContent(ratingDto.Id);
                 if (touristContent is Accommodation)
-                    ratingDto.TouristContentDto = _mapper.Map<AccommodationDto>(touristContent);
+                    ratingDto.TouristContent = _mapper.Map<AccommodationDto>(touristContent);
                 else if (touristContent is FoodAndDrink)
-                    ratingDto.TouristContentDto = _mapper.Map<FoodAndDrinkDto>(touristContent);
+                    ratingDto.TouristContent = _mapper.Map<FoodAndDrinkDto>(touristContent);
                 else if (touristContent is Activity)
-                    ratingDto.TouristContentDto = _mapper.Map<ActivityDto>(touristContent);
+                    ratingDto.TouristContent = _mapper.Map<ActivityDto>(touristContent);
                 else
                     continue;
             }
