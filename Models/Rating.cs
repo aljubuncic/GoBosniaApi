@@ -8,7 +8,7 @@ namespace GoTravnikApi.Models
         public int Value { get; set; }
         public string TextComment { get; set; }
         public DateTime PostDate { get; set; } = DateTime.Now;
-        public bool Approved { get; set; }  
+        public bool Approved { get; set; } = false;
 
         public Rating() { }
 
