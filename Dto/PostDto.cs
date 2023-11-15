@@ -1,6 +1,6 @@
 ﻿namespace GoTravnikApi.Dto
 {
-    public class PostDto
+    public class PostDto : TouristContentDto
     {
         public PostDto()
         { 
