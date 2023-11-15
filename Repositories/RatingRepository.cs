@@ -3,6 +3,7 @@ using GoTravnikApi.Interfaces;
 using GoTravnikApi.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace GoTravnikApi.Repositories
 {
@@ -23,7 +24,20 @@ namespace GoTravnikApi.Repositories
         {
             return await _dataContext.Rating.ToListAsync();
         }
+        public async Task<bool> UpdateRating(Rating rating)
+        {
+            _dataContext.Rating.Update(rating);
+            return await Save();
+        }
 
+        public async Task<Rating> GetRating(int id)
+        {
+            return await _dataContext.Rating.FirstAsync(r => r.Id == id);
+        }
+        public async Task<bool> RatingExists(int id)
+        {
+            return await _dataContext.Rating.AnyAsync(r => r.Id == id); 
+        }
         public async Task<bool> Save()
         {
             var saved = await _dataContext.SaveChangesAsync();

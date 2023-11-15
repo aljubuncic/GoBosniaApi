@@ -47,5 +47,32 @@ namespace GoTravnikApi.Controllers
             return Ok(ratingDtos);  
         }
 
+        [HttpPost("{id:int}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<ActionResult> ApproveRating(int id)
+        {
+            if (!await _ratingRepository.RatingExists(id))
+            {
+                ModelState.AddModelError("error", "Rating does not exist in the database");
+                return StatusCode(400, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var rating = await _ratingRepository.GetRating(id);
+            rating.Approved = true;
+
+            if (!await _ratingRepository.UpdateRating(rating))
+            {
+                ModelState.AddModelError("error", "Database updating errror");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Succesfully approved");
+
+        }
+
     }
 }

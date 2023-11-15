@@ -58,7 +58,7 @@ namespace GoTravnikApi.Repository
 
         public async Task<bool> Save()
         {
-            var saved =await _dataContext.SaveChangesAsync();
+            var saved = await _dataContext.SaveChangesAsync();
             return saved > 0;
         }
 
