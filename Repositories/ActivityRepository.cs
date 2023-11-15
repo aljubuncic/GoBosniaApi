@@ -14,7 +14,7 @@ namespace GoTravnikApi.Repository
         }
         public async Task<bool> ActivityExists(int id)
         {
-            return await _dataContext.Accomodation.AnyAsync(a => a.Id == id);
+            return await _dataContext.Activity.AnyAsync(a => a.Id == id);
         }
 
         public async Task<Activity> GetActivity(int id)
