@@ -29,17 +29,31 @@ namespace GoTravnikApi.Repository
 
         public async Task<Accommodation> GetAccommodation(int id)
         {
-            return await _dataContext.Accomodation.Where(a => a.Id == id).FirstOrDefaultAsync();
+            return await _dataContext.Accomodation
+                .Where(a => a.Id == id)
+                .Include(a => a.Location)
+                .Include(a => a.Ratings)
+                .Include(a => a.Subcategories)
+               .FirstOrDefaultAsync();
         }
 
         public async Task<List<Accommodation>> GetAccomodations()
         {
-            return await _dataContext.Accomodation.Include(x => x.Location).Include(x => x.Ratings).ToListAsync();
+            return await _dataContext.Accomodation
+            .Include(x => x.Location)
+            .Include(x => x.Ratings)
+            .Include(x => x.Subcategories)
+            .ToListAsync();
         }
 
         public async Task<List<Accommodation>> GetAccomodations(string searchName)
         {
-            return await _dataContext.Accomodation.Where(a => a.Name.ToLower().Contains(searchName.ToLower())).ToListAsync();
+            return await _dataContext.Accomodation
+                .Where(a => a.Name.ToLower().Contains(searchName.ToLower()))
+                .Include(x => x.Location)
+                .Include(x => x.Ratings)
+                .Include(x => x.Subcategories)
+                .ToListAsync();
         }
 
         public async Task<bool> Save()

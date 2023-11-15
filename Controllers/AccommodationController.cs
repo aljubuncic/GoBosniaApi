@@ -1,4 +1,5 @@
-﻿using GoTravnikApi.Dto;
+﻿using AutoMapper;
+using GoTravnikApi.Dto;
 using GoTravnikApi.Interfaces;
 using GoTravnikApi.Models;
 using Microsoft.AspNetCore.Http;
@@ -12,49 +13,51 @@ namespace GoTravnikApi.Controllers
     {
         private readonly IAccommodationRepository _accommodationRepository;
         private readonly ISubcategoryRepository _subcategoryRepository;
-        public AccommodationController(IAccommodationRepository accommodationRepository, ISubcategoryRepository subcategoryRepository)
+        private readonly IMapper _mapper;
+        public AccommodationController(IAccommodationRepository accommodationRepository, ISubcategoryRepository subcategoryRepository, IMapper mapper)
         {
             _accommodationRepository = accommodationRepository;
             _subcategoryRepository = subcategoryRepository;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(List<Accommodation>))]
-        public async Task<ActionResult<List<Accommodation>>> GetAccommodations()
+        [ProducesResponseType(200, Type = typeof(List<AccommodationDto>))]
+        public async Task<ActionResult<List<AccommodationDto>>> GetAccommodations()
         {
-            var events = await _accommodationRepository.GetAccomodations();
+            var accommodationDtos =_mapper.Map<List<AccommodationDto>> (await _accommodationRepository.GetAccomodations());
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return Ok(events);
+            return Ok(accommodationDtos);
         }
 
         [HttpGet("{id:int}")]
-        [ProducesResponseType(200, Type = typeof(Accommodation))]
+        [ProducesResponseType(200, Type = typeof(AccommodationDto))]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<Accommodation>> GetAccommodation(int id)
+        public async Task<ActionResult<AccommodationDto>> GetAccommodation(int id)
         {
             if (!await _accommodationRepository.AccomodationExists(id))
                 return NotFound(ModelState);
-            var events = await _accommodationRepository.GetAccommodation(id);
+            var accommodationDto =_mapper.Map<AccommodationDto>(await _accommodationRepository.GetAccommodation(id));
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return Ok(events);
+            return Ok(accommodationDto);
         }
 
         [HttpGet("{name}")]
-        [ProducesResponseType(200, Type = typeof(List<Accommodation>))]
-        public async Task<ActionResult<List<Accommodation>>> GetAccommodations(string name)
+        [ProducesResponseType(200, Type = typeof(List<AccommodationDto>))]
+        public async Task<ActionResult<List<AccommodationDto>>> GetAccommodations(string name)
         {
-            var accommodations = await _accommodationRepository.GetAccomodations(name);
+            var accommodationDtos = _mapper.Map<List<AccommodationDto>>(await _accommodationRepository.GetAccomodations(name));
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return Ok(accommodations);
+            return Ok(accommodationDtos);
         }
 
         [HttpPost]

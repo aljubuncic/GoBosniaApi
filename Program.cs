@@ -3,17 +3,19 @@ using GoTravnikApi.Interfaces;
 using GoTravnikApi.Repositories;
 using GoTravnikApi.Repository;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
+using GoTravnikApi.Helper;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+builder.Services.AddAutoMapper(typeof(MappingProfiles));
 builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<IAccommodationRepository, AccommodationRepository>();    
 builder.Services.AddScoped<IActivityRepository, ActivityRepository>();
 builder.Services.AddScoped<IAttractionRepository, AttractionRepository>();
 builder.Services.AddScoped<IFoodAndDrinkRepository, FoodAndDrinkRepository>();
-builder.Services.AddScoped<ILocationRepository, LocationRepository>();  
+builder.Services.AddScoped<ILocationRepository, LocationRepository>();
 builder.Services.AddScoped<ISubcategoryRepository, SubcategoryRepository>();
 builder.Services.AddControllers();
 builder.Services.AddCors(options =>

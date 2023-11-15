@@ -4,5 +4,8 @@
     {
         public string Website { get; set; }
         public string TelephoneNumber { get; set; }
+        public AccommodationDto()
+        {
+        }
     }
 }
