@@ -9,7 +9,7 @@ namespace GoTravnikApi.Data
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
-        public DbSet<Accommodation> Accomodation { get; set; }
+        public DbSet<Accommodation> Accommodation { get; set; }
         public DbSet<Activity> Activity { get; set; }
         public DbSet<Attraction> Attraction { get; set; }
         public DbSet<Event> Event { get; set; }
