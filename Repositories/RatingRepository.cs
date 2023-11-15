@@ -1,6 +1,7 @@
 ﻿using GoTravnikApi.Data;
 using GoTravnikApi.Interfaces;
 using GoTravnikApi.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace GoTravnikApi.Repositories
@@ -16,6 +17,11 @@ namespace GoTravnikApi.Repositories
         {
             _dataContext.Rating.Add(rating);
             return await Save();
+        }
+
+        public async Task<List<Rating>> GetRatings()
+        {
+            return await _dataContext.Rating.ToListAsync();
         }
 
         public async Task<bool> Save()
