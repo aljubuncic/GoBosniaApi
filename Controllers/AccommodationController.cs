@@ -89,7 +89,7 @@ namespace GoTravnikApi.Controllers
                 var subcategory = await _subcategoryRepository.GetSubcategory(subcategoryDto.Name);
                 subcategories.Add(subcategory);
             }
-            Accommodation accommodation = new Accommodation(accommodationDto);
+            Accommodation accommodation = _mapper.Map<Accommodation>(accommodationDto);
             accommodation.Subcategories = subcategories;
 
             if (!await _accommodationRepository.AddAccommodation(accommodation))

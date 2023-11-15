@@ -11,6 +11,7 @@ namespace GoTravnikApi.Helper
             CreateMap<Subcategory, SubcategoryDto>();
             CreateMap<Accommodation, AccommodationDto>();
             CreateMap<RatingDto, Rating>();
+            CreateMap<AccommodationDto, Accommodation>();
         }
     }
 }
