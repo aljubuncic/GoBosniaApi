@@ -15,7 +15,7 @@ namespace GoTravnikApi.Repository
         }
         public async Task<bool> AccomodationExists(int id)
         {
-            return await _dataContext.Accomodation.AnyAsync(a => a.Id == id);
+            return await _dataContext.Accommodation.AnyAsync(a => a.Id == id);
         }
 
         public async Task<bool> AddAccommodation(Accommodation accommodation)
@@ -29,7 +29,7 @@ namespace GoTravnikApi.Repository
 
         public async Task<Accommodation> GetAccommodation(int id)
         {
-            return await _dataContext.Accomodation
+            return await _dataContext.Accommodation
                 .Where(a => a.Id == id)
                 .Include(a => a.Location)
                 .Include(a => a.Ratings)
@@ -39,7 +39,7 @@ namespace GoTravnikApi.Repository
 
         public async Task<List<Accommodation>> GetAccomodations()
         {
-            return await _dataContext.Accomodation
+            return await _dataContext.Accommodation
             .Include(x => x.Location)
             .Include(x => x.Ratings)
             .Include(x => x.Subcategories)
@@ -48,7 +48,7 @@ namespace GoTravnikApi.Repository
 
         public async Task<List<Accommodation>> GetAccomodations(string searchName)
         {
-            return await _dataContext.Accomodation
+            return await _dataContext.Accommodation
                 .Where(a => a.Name.ToLower().Contains(searchName.ToLower()))
                 .Include(x => x.Location)
                 .Include(x => x.Ratings)

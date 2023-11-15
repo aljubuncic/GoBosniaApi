@@ -12,11 +12,13 @@ namespace GoTravnikApi.Controllers
     public class RatingController : ControllerBase
     {
         private readonly IRatingRepository _ratingRepository;
+        private readonly ITouristContentRepository _touristContentRepository;
         private readonly IMapper _mapper;
 
-        public RatingController(IRatingRepository ratingRepository, IMapper mapper)
+        public RatingController(IRatingRepository ratingRepository, ITouristContentRepository touristContentRepository,IMapper mapper)
         {
             _ratingRepository = ratingRepository;
+            _touristContentRepository = touristContentRepository;
             _mapper = mapper;
         }
 
@@ -26,7 +28,20 @@ namespace GoTravnikApi.Controllers
         {
             var ratingDtos = _mapper.Map<List<RatingDto>>(await _ratingRepository.GetRatings());
 
-            if(!ModelState.IsValid)
+            foreach(var ratingDto in ratingDtos)
+            {
+                var touristContent = await _touristContentRepository.GetTouristContent(ratingDto.Id);
+                if (touristContent is Accommodation)
+                    ratingDto.TouristContentDto = _mapper.Map<AccommodationDto>(touristContent);
+                else if (touristContent is FoodAndDrink)
+                    ratingDto.TouristContentDto = _mapper.Map<FoodAndDrinkDto>(touristContent);
+                else if (touristContent is Activity)
+                    ratingDto.TouristContentDto = _mapper.Map<ActivityDto>(touristContent);
+                else
+                    continue;
+            }
+
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState); 
             
             return Ok(ratingDtos);  
