@@ -13,11 +13,13 @@ namespace GoTravnikApi.Controllers
     {
         private readonly IAccommodationRepository _accommodationRepository;
         private readonly ISubcategoryRepository _subcategoryRepository;
+        private readonly IRatingRepository _ratingRepository;
         private readonly IMapper _mapper;
-        public AccommodationController(IAccommodationRepository accommodationRepository, ISubcategoryRepository subcategoryRepository, IMapper mapper)
+        public AccommodationController(IAccommodationRepository accommodationRepository, ISubcategoryRepository subcategoryRepository, IRatingRepository ratingRepository, IMapper mapper)
         {
             _accommodationRepository = accommodationRepository;
             _subcategoryRepository = subcategoryRepository;
+            _ratingRepository = ratingRepository;
             _mapper = mapper;
         }
 
@@ -96,7 +98,45 @@ namespace GoTravnikApi.Controllers
                 return StatusCode(500, ModelState);
             }
 
-            return Ok("Succesfully created");
+            return Ok("Succesfully added");
+
+        }
+
+        [HttpPost("/rating/{accommodationId:int}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<ActionResult> AddRating(int accommodationId, [FromBody] RatingDto ratingDto)
+        {
+            if (ratingDto == null)
+                return BadRequest(ModelState);
+
+            if(!await _accommodationRepository.AccomodationExists(accommodationId))
+            {
+                ModelState.AddModelError("error", "Accomoodation does not exist in the database");
+                return StatusCode(400, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var accommodation = await _accommodationRepository.GetAccommodation(accommodationId);
+            var rating = _mapper.Map<Rating>(ratingDto);
+
+            accommodation.Ratings.Add(rating);
+
+            if (!await _ratingRepository.AddRating(rating))
+            {
+                ModelState.AddModelError("error", "Database updating error");
+                return StatusCode(500, ModelState);
+            }
+
+            if (!await _accommodationRepository.UpdateAccommodation(accommodation))
+            {
+                ModelState.AddModelError("error", "Database updating error");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Successfully added");
 
         }
     }

@@ -10,6 +10,7 @@ namespace GoTravnikApi.Interfaces
         public Task<bool> AccomodationExists(int id);
 
         public Task<bool> AddAccommodation(Accommodation accommodation);
+        public Task<bool> UpdateAccommodation(Accommodation accommodation);
 
         public Task<bool> Save();
     }

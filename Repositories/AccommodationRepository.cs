@@ -34,7 +34,7 @@ namespace GoTravnikApi.Repository
                 .Include(a => a.Location)
                 .Include(a => a.Ratings)
                 .Include(a => a.Subcategories)
-               .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync();
         }
 
         public async Task<List<Accommodation>> GetAccomodations()
@@ -60,6 +60,12 @@ namespace GoTravnikApi.Repository
         {
             var saved =await _dataContext.SaveChangesAsync();
             return saved > 0;
+        }
+
+        public Task<bool> UpdateAccommodation(Accommodation accommodation)
+        {
+            _dataContext.Update(accommodation);
+            return Save();
         }
     }
 }
