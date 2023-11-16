@@ -22,6 +22,24 @@ namespace GoTravnikApi.Repositories
             return await Save();
         }
 
+        public async Task<List<FoodAndDrink>> FilterAndOrderFoodAndDrinks(List<string> subcategoryNames, string sortOption)
+        {
+            var query = _dataContext.FoodAndDrink.AsQueryable();
+            foreach (var subcategory in subcategoryNames)
+                query = query.Where(fad => fad.Subcategories.Any(sub => sub.Name == subcategory) == true);
+
+            if (sortOption == "alphabetical")
+                query = query.OrderBy(fad => fad.Name);
+
+            else if (sortOption == "popular")
+                query = query.OrderBy(fad => fad.Ratings.Select(r => r.Value).Average());
+
+            return await query
+                .Include(fad => fad.Location)
+                .Include(fad => fad.Ratings)
+                .ToListAsync();
+        }
+
         public async Task<bool> FoodAndDrinkExists(int id)
         {
             return await _dataContext.FoodAndDrink.AnyAsync(fad => fad.Id == id);
