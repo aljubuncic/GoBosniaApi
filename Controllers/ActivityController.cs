@@ -98,7 +98,7 @@ namespace GoTravnikApi.Controllers
                 return StatusCode(500, ModelState);
             }
 
-            return Ok("Succesfully added");
+            return Ok ("Succesfully added");
 
         }
 
