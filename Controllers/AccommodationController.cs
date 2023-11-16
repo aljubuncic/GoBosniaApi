@@ -2,6 +2,7 @@
 using GoTravnikApi.Dto;
 using GoTravnikApi.Interfaces;
 using GoTravnikApi.Models;
+using GoTravnikApi.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -55,6 +56,20 @@ namespace GoTravnikApi.Controllers
         public async Task<ActionResult<List<AccommodationDto>>> GetAccommodations(string name)
         {
             var accommodationDtos = _mapper.Map<List<AccommodationDto>>(await _accommodationRepository.GetAccomodations(name));
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(accommodationDtos);
+        }
+
+        [HttpPost("{sortOption}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<ActionResult<List<AccommodationDto>>> GetFilteredAndOrderedFoodAndDrinks([FromBody] List<string> subcategoryNames, string sortOption)
+        {
+
+            var accommodationDtos = _mapper.Map<List<AccommodationDto>>(await _accommodationRepository.FilterAndOrderAccommodations(subcategoryNames, sortOption));
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

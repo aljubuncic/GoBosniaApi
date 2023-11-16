@@ -27,6 +27,24 @@ namespace GoTravnikApi.Repository
             return await Save();
         }
 
+        public async Task<List<Accommodation>> FilterAndOrderAccommodations(List<string> subcategoryNames, string sortOption)
+        {
+            var query = _dataContext.Accommodation.AsQueryable();
+            foreach (var subcategory in subcategoryNames)
+                query = query.Where(a => a.Subcategories.Any(sub => sub.Name == subcategory) == true);
+
+            if (sortOption == "alphabetical")
+                query = query.OrderBy(a => a.Name);
+
+            else if (sortOption == "popular")
+                query = query.OrderByDescending(a => a.Ratings.Select(r => r.Value).Average());
+
+            return await query
+                .Include(a => a.Location)
+                .Include(a => a.Ratings)
+                .ToListAsync();
+        }
+
         public async Task<Accommodation> GetAccommodation(int id)
         {
             return await _dataContext.Accommodation
