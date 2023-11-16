@@ -1,5 +1,8 @@
-﻿using GoTravnikApi.Interfaces;
+﻿using AutoMapper;
+using GoTravnikApi.Dto;
+using GoTravnikApi.Interfaces;
 using GoTravnikApi.Models;
+using GoTravnikApi.Repositories;
 using GoTravnikApi.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,9 +14,13 @@ namespace GoTravnikApi.Controllers
     public class FoodAndDrinkController : ControllerBase
     {
         private readonly IFoodAndDrinkRepository _foodAndDrinkRepository;
-        public FoodAndDrinkController(IFoodAndDrinkRepository foodAndDrinkRepository)
+        private readonly ISubcategoryRepository _subcategoryRepository;
+        private readonly IMapper _mapper;
+        public FoodAndDrinkController(IFoodAndDrinkRepository foodAndDrinkRepository, ISubcategoryRepository subcategoryRepository, IMapper mapper)
         {
             _foodAndDrinkRepository = foodAndDrinkRepository;
+            _subcategoryRepository = subcategoryRepository;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -53,6 +60,46 @@ namespace GoTravnikApi.Controllers
                 return BadRequest(ModelState);
 
             return Ok(foodAndDrinks);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<ActionResult> AddFoodAndDrink([FromBody] FoodAndDrinkDto foodAndDrinkDto)
+        {
+            if (foodAndDrinkDto == null)
+                return BadRequest(ModelState);
+
+            if (foodAndDrinkDto.Location == null)
+                return BadRequest(ModelState);
+
+            if (!await _subcategoryRepository.SubcategoriesExist(foodAndDrinkDto.Subcategories.Select(x => x.Name).ToList()))
+            {
+                ModelState.AddModelError("error", "Subcategory does not exist in the database");
+                return StatusCode(400, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            List<Subcategory> subcategories = new List<Subcategory>();
+
+            foreach (var subcategoryDto in foodAndDrinkDto.Subcategories)
+            {
+                var subcategory = await _subcategoryRepository.GetSubcategory(subcategoryDto.Name);
+                subcategories.Add(subcategory);
+            }
+            FoodAndDrink foodAndDrink = _mapper.Map<FoodAndDrink>(foodAndDrinkDto);
+            foodAndDrink.Subcategories = subcategories;
+
+            if (!await _foodAndDrinkRepository.AddFoodAndDrink(foodAndDrink))
+            {
+                ModelState.AddModelError("error", "Database saving error");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Succesfully added");
+
         }
     }
 }

@@ -8,5 +8,7 @@ namespace GoTravnikApi.Interfaces
         public Task<List<FoodAndDrink>> GetFoodAndDrinks(string searchName);
         public Task<FoodAndDrink> GetFoodAndDrink(int id);
         public Task<bool> FoodAndDrinkExists(int id);
+        public Task<bool> AddFoodAndDrink(FoodAndDrink foodAndDrink);
+        public Task<bool> Save();
     }
 }
