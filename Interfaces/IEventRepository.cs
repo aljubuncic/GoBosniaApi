@@ -13,5 +13,8 @@ namespace GoTravnikApi.Interfaces
         
         public Task<bool> EventExists(int id);
 
+        public Task<bool> AddEvent(Event _event);
+        public Task<bool> Save();
+
     }
 }

@@ -37,5 +37,21 @@ namespace GoTravnikApi.Repository
         {
             return await _dataContext.Event.Where(a => a.Name.ToLower().Contains(searchName.ToLower())).ToListAsync();
         }
+
+        public async Task<bool> AddEvent(Event _event)
+        {
+            await _dataContext.Location.AddAsync(_event.Location);
+
+            await _dataContext.Event.AddAsync(_event);
+
+            return await Save();
+        }
+
+        public async Task<bool> Save()
+        {
+            var saved = await _dataContext.SaveChangesAsync();
+            return saved > 0;
+        }
+
     }
 }
