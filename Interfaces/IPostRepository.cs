@@ -7,6 +7,7 @@ namespace GoTravnikApi.Interfaces
         public Task<List<Post>> GetPosts();
         public Task<Post> GetPost(int postId);
         public Task<bool> PostExists(int postId);
-        public Task<List<Post>> GetPosts(string searchName);
+        public Task<List<Post>> GetPosts(string subcategoryName);
+        public Task<bool> AddPost(Post post);
     }
 }

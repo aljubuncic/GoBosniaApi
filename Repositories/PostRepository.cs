@@ -40,15 +40,17 @@ namespace GoTravnikApi.Repositories
             return await _dataContext.Post.ToListAsync();
         }
 
-        public async Task<List<Post>> GetPosts(string searchName)
-        {
-            return await _dataContext.Post.Where(a => a.Name.ToLower().Contains(searchName.ToLower())).ToListAsync();
-        }
-
         public async Task<bool> Save()
         {
             var saved = await _dataContext.SaveChangesAsync();
             return saved > 0;
+        }
+
+        public Task<List<Post>> GetPosts(string subcategoryName)
+        {
+            return _dataContext.Post
+                .Where(x =>  x.Subcategories.Any(s => s.Name == subcategoryName) == true)
+                .ToListAsync();
         }
     }
 

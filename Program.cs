@@ -19,6 +19,7 @@ builder.Services.AddScoped<ILocationRepository, LocationRepository>();
 builder.Services.AddScoped<ISubcategoryRepository, SubcategoryRepository>();
 builder.Services.AddScoped<IRatingRepository, RatingRepository>();
 builder.Services.AddScoped<ITouristContentRepository, TouristContentRepository>();  
+builder.Services.AddScoped<IPostRepository, PostRepository>();  
 builder.Services.AddControllers();
 builder.Services.AddCors(options =>
 {

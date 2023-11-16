@@ -29,9 +29,11 @@ namespace GoTravnikApi.Helper
             CreateMap<Event, EventDto>();
             CreateMap<EventDto, Event>();
 
-
             CreateMap<FoodAndDrink, FoodAndDrinkDto>();
             CreateMap<FoodAndDrinkDto, FoodAndDrink>();
+
+            CreateMap<Post, PostDto>();
+            CreateMap<PostDto, Post>();
         }
     }
 }

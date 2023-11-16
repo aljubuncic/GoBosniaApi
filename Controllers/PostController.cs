@@ -5,6 +5,7 @@ using GoTravnikApi.Interfaces;
 using GoTravnikApi.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using GoTravnikApi.Models;
 
 namespace GoTravnikApi.Controllers
 {
@@ -59,6 +60,47 @@ namespace GoTravnikApi.Controllers
 
             return Ok(postDtos);
         }
+        [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<ActionResult> AddPost([FromBody] PostDto postDto)
+        {
+            if (postDto == null)
+                return BadRequest(ModelState);
 
+            if(postDto.Location == null)
+                return BadRequest(ModelState);
+
+            if (!await _subcategoryRepository.SubcategoriesExist(postDto.Subcategories.Select(x => x.Name).ToList()))
+            {
+                ModelState.AddModelError("error", "Subcategory does not exist in the database");
+                return StatusCode(400, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            List<Subcategory> subcategories = new List<Subcategory>();
+
+            foreach (var subcategoryDto in postDto.Subcategories)
+            {
+                var subcategory = await _subcategoryRepository.GetSubcategory(subcategoryDto.Name);
+                subcategories.Add(subcategory);
+            }
+
+            Post post = _mapper.Map<Post>(postDto);
+            post.Subcategories = subcategories;
+            post.PostDate = DateTime.Now;
+
+            if (!await _postRepository.AddPost(post))
+            {
+                ModelState.AddModelError("error", "Database saving error");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Succesfully added");
+
+        }
     }
 }
+
