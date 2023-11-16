@@ -1,5 +1,8 @@
-﻿using GoTravnikApi.Interfaces;
+﻿using AutoMapper;
+using GoTravnikApi.Dto;
+using GoTravnikApi.Interfaces;
 using GoTravnikApi.Models;
+using GoTravnikApi.Repositories;
 using GoTravnikApi.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,9 +14,13 @@ namespace GoTravnikApi.Controllers
     public class ActivityController : Controller
     {
         private readonly IActivityRepository _activityRepository;
-        public ActivityController(IActivityRepository activityRepository)
+        private readonly ISubcategoryRepository _subcategoryRepository;
+        private readonly IMapper _mapper;
+        public ActivityController(IActivityRepository activityRepository, ISubcategoryRepository subcategoryRepository, IMapper mapper)
         {
             _activityRepository = activityRepository;
+            _subcategoryRepository = subcategoryRepository;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -54,5 +61,46 @@ namespace GoTravnikApi.Controllers
 
             return Ok(activities);
         }
+
+        [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<ActionResult> AddActivity([FromBody] ActivityDto activityDto)
+        {
+            if (activityDto == null)
+                return BadRequest(ModelState);
+
+            if (activityDto.Location == null)
+                return BadRequest(ModelState);
+
+            if (!await _subcategoryRepository.SubcategoriesExist(activityDto.Subcategories.Select(x => x.Name).ToList()))
+            {
+                ModelState.AddModelError("error", "Subcategory does not exist in the database");
+                return StatusCode(400, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            List<Subcategory> subcategories = new List<Subcategory>();
+
+            foreach (var subcategoryDto in activityDto.Subcategories)
+            {
+                var subcategory = await _subcategoryRepository.GetSubcategory(subcategoryDto.Name);
+                subcategories.Add(subcategory);
+            }
+            Activity activity = _mapper.Map<Activity>(activityDto);
+            activity.Subcategories = subcategories;
+
+            if (!await _activityRepository.AddActivity(activity))
+            {
+                ModelState.AddModelError("error", "Database saving error");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Succesfully added");
+
+        }
+
     }
 }

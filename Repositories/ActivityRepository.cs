@@ -31,5 +31,19 @@ namespace GoTravnikApi.Repository
         {
             return await _dataContext.Activity.Where(a => a.Name.ToLower().Contains(searchName.ToLower())).ToListAsync();
         }
+
+        public async Task<bool> AddActivity(Activity activity)
+        {
+            await _dataContext.Location.AddAsync(activity.Location);
+
+            await _dataContext.Activity.AddAsync(activity);
+
+            return await Save();
+        }
+        public async Task<bool> Save()
+        {
+            var saved = await _dataContext.SaveChangesAsync();
+            return saved > 0;
+        }
     }
 }
