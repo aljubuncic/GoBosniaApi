@@ -48,11 +48,11 @@ namespace GoTravnikApi.Controllers
             return Ok(postDto);
         }
 
-        [HttpGet("{name}")]
+        [HttpGet("{subcategoryName}")]
         [ProducesResponseType(200, Type = typeof(List<PostDto>))]
-        public async Task<ActionResult<List<PostDto>>> GetPosts(string name)
+        public async Task<ActionResult<List<PostDto>>> GetPosts(string subcategoryName)
         {
-            var postDtos = _mapper.Map<List<PostDto>>(await _postRepository.GetPosts(name));
+            var postDtos = _mapper.Map<List<PostDto>>(await _postRepository.GetPosts(subcategoryName));
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
