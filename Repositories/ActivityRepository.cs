@@ -45,5 +45,23 @@ namespace GoTravnikApi.Repository
             var saved = await _dataContext.SaveChangesAsync();
             return saved > 0;
         }
+
+        public async Task<List<Activity>> FilterAndOrderActivities(List<string> subcategoryNames, string sortOption)
+        {
+            var query = _dataContext.Activity.AsQueryable();
+            foreach (var subcategory in subcategoryNames)
+                query = query.Where(a => a.Subcategories.Any(sub => sub.Name == subcategory) == true);
+
+            if (sortOption == "alphabetical")
+                query = query.OrderBy(a => a.Name);
+
+            else if (sortOption == "popular")
+                query = query.OrderByDescending(a => a.Ratings.Select(r => r.Value).Average());
+
+            return await query
+                .Include(a => a.Location)
+                .Include(a => a.Ratings)
+                .ToListAsync();
+        }
     }
 }

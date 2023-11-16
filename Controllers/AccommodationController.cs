@@ -66,7 +66,7 @@ namespace GoTravnikApi.Controllers
         [HttpPost("{sortOption}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult<List<AccommodationDto>>> GetFilteredAndOrderedFoodAndDrinks([FromBody] List<string> subcategoryNames, string sortOption)
+        public async Task<ActionResult<List<AccommodationDto>>> GetFilteredAndOrderedActivities([FromBody] List<string> subcategoryNames, string sortOption)
         {
 
             var accommodationDtos = _mapper.Map<List<AccommodationDto>>(await _accommodationRepository.FilterAndOrderAccommodations(subcategoryNames, sortOption));

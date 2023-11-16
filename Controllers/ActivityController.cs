@@ -62,6 +62,19 @@ namespace GoTravnikApi.Controllers
             return Ok(activities);
         }
 
+        [HttpPost("{sortOption}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<ActionResult<List<AccommodationDto>>> GetFilteredAndOrderedActivities([FromBody] List<string> subcategoryNames, string sortOption)
+        {
+            var activityDtos = _mapper.Map<List<ActivityDto>>(await _activityRepository.FilterAndOrderActivities(subcategoryNames, sortOption));
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(activityDtos);
+        }
+
         [HttpPost]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
