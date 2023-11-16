@@ -8,5 +8,8 @@ namespace GoTravnikApi.Interfaces
         public Task<List<Attraction>> GetAttractions(string searchName);
         public Task<Attraction> GetAttraction(int id);
         public Task<bool> AttractionExists(int id);
+        public Task<bool> AddAttraction(Attraction attraction);
+
+        public Task<bool> Save();
     }
 }
