@@ -32,7 +32,7 @@ namespace GoTravnikApi.Repositories
                 query = query.OrderBy(fad => fad.Name);
 
             else if (sortOption == "popular")
-                query = query.OrderBy(fad => fad.Ratings.Select(r => r.Value).Average());
+                query = query.OrderByDescending(fad => fad.Ratings.Select(r => r.Value).Average());
 
             return await query
                 .Include(fad => fad.Location)
