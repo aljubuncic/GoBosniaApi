@@ -15,11 +15,13 @@ namespace GoTravnikApi.Controllers
     {
         private readonly IActivityRepository _activityRepository;
         private readonly ISubcategoryRepository _subcategoryRepository;
+        private readonly IRatingRepository _ratingRepository;
         private readonly IMapper _mapper;
-        public ActivityController(IActivityRepository activityRepository, ISubcategoryRepository subcategoryRepository, IMapper mapper)
+        public ActivityController(IActivityRepository activityRepository, ISubcategoryRepository subcategoryRepository, IRatingRepository ratingRepository, IMapper mapper)
         {
             _activityRepository = activityRepository;
             _subcategoryRepository = subcategoryRepository;
+            _ratingRepository = ratingRepository;   
             _mapper = mapper;
         }
 
@@ -112,6 +114,44 @@ namespace GoTravnikApi.Controllers
             }
 
             return Ok ("Succesfully added");
+
+        }
+
+        [HttpPost("rating/{activityId:int}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<ActionResult> AddRating(int activityId, [FromBody] RatingDtoRequest ratingDto)
+        {
+            if (ratingDto == null)
+                return BadRequest(ModelState);
+
+            if (!await _activityRepository.ActivityExists(activityId))
+            {
+                ModelState.AddModelError("error", "Activity does not exist in the database");
+                return StatusCode(400, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var activity = await _activityRepository.GetActivity(activityId);
+            var rating = _mapper.Map<Rating>(ratingDto);
+
+            activity.Ratings.Add(rating);
+
+            if (!await _ratingRepository.AddRating(rating))
+            {
+                ModelState.AddModelError("error", "Database updating error");
+                return StatusCode(500, ModelState);
+            }
+
+            if (!await _activityRepository.UpdateActivity(activity))
+            {
+                ModelState.AddModelError("error", "Database updating error");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Successfully added");
 
         }
 

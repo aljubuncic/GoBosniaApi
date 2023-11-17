@@ -117,10 +117,10 @@ namespace GoTravnikApi.Controllers
 
         }
 
-        [HttpPost("/rating/{accommodationId:int}")]
+        [HttpPost("rating/{accommodationId:int}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult> AddRating(int accommodationId, [FromBody] RatingDto ratingDto)
+        public async Task<ActionResult> AddRating(int accommodationId, [FromBody] RatingDtoRequest ratingDto)
         {
             if (ratingDto == null)
                 return BadRequest(ModelState);

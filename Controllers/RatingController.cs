@@ -23,10 +23,10 @@ namespace GoTravnikApi.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(List<RatingDto>))]
-        public async Task<ActionResult<List<RatingDto>>> GetRatings() 
+        [ProducesResponseType(200, Type = typeof(List<RatingDtoResponse>))]
+        public async Task<ActionResult<List<RatingDtoResponse>>> GetRatings() 
         {
-            var ratingDtos = _mapper.Map<List<RatingDto>>(await _ratingRepository.GetRatings());
+            var ratingDtos = _mapper.Map<List<RatingDtoResponse>>(await _ratingRepository.GetRatings());
 
             foreach(var ratingDto in ratingDtos)
             {
