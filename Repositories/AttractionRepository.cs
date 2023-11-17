@@ -19,17 +19,29 @@ namespace GoTravnikApi.Repository
 
         public async Task<Attraction> GetAttraction(int id)
         {
-            return await _dataContext.Attraction.Where(a => a.Id == id).FirstOrDefaultAsync();
+            return await _dataContext.Attraction
+                .Where(a => a.Id == id)
+                .Include(a => a.Location)
+                .Include(a => a.Ratings)
+                .Include(a => a.Subcategories)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<List<Attraction>> GetAttractions()
         {
-            return await _dataContext.Attraction.ToListAsync();
+            return await _dataContext.Attraction
+                .Include(a => a.Location)
+                .Include(a => a.Ratings)
+                .ToListAsync();
         }
 
         public async Task<List<Attraction>> GetAttractions(string searchName)
         {
-            return await _dataContext.Attraction.Where(a => a.Name.ToLower().Contains(searchName.ToLower())).ToListAsync();
+            return await _dataContext.Attraction
+                .Where(a => a.Name.ToLower().Contains(searchName.ToLower()))
+                .Include(a => a.Location)
+                .Include(a => a.Ratings)
+                .ToListAsync();
         }
         public async Task<bool> AddAttraction(Attraction attraction)
         {

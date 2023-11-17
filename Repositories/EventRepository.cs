@@ -20,22 +20,38 @@ namespace GoTravnikApi.Repository
 
         public async Task<Event> GetEvent(int id)
         {
-            return await _dataContext.Event.Where(e => e.Id == id).FirstOrDefaultAsync();
+            return await _dataContext.Event
+                .Where(e => e.Id == id)
+                .Include(e => e.Location)
+                .Include(e => e.Ratings)
+                .Include(e => e.Subcategories)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<List<Event>> GetEvents()
         {
-            return await _dataContext.Event.ToListAsync();
+            return await _dataContext.Event
+                .Include(a => a.Location)
+                .Include(a => a.Ratings)
+                .ToListAsync();
         }
 
         public async Task<List<Event>> GetEvents(DateTime startDate, DateTime endDate)
         {
-            return await _dataContext.Event.Where(e => e.startDate >= startDate && e.endDate <= endDate).ToListAsync();
+            return await _dataContext.Event
+                .Where(e => e.startDate >= startDate && e.endDate <= endDate)
+                .Include(e => e.Ratings)
+                .Include(e => e.Location)
+                .ToListAsync();
         }
 
         public async Task<List<Event>> GetEvents(string searchName)
         {
-            return await _dataContext.Event.Where(a => a.Name.ToLower().Contains(searchName.ToLower())).ToListAsync();
+            return await _dataContext.Event
+                .Where(a => a.Name.ToLower().Contains(searchName.ToLower()))
+                .Include(a => a.Ratings)
+                .Include(a => a.Location)
+                .ToListAsync();
         }
 
         public async Task<bool> AddEvent(Event _event)

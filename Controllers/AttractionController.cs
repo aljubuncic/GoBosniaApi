@@ -22,42 +22,42 @@ namespace GoTravnikApi.Controllers
             _mapper = mapper;
         }
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(List<Attraction>))]
-        public async Task<ActionResult<List<Attraction>>> GetAttractions()
+        [ProducesResponseType(200, Type = typeof(List<AttractionDto>))]
+        public async Task<ActionResult<List<AttractionDto>>> GetAttractions()
         {
-            var events = await _attractionRepository.GetAttractions();
+            var attractionDtos = _mapper.Map<List<AttractionDto>>(await _attractionRepository.GetAttractions());
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return Ok(events);
+            return Ok(attractionDtos);
         }
 
         [HttpGet("{id:int}")]
-        [ProducesResponseType(200, Type = typeof(Attraction))]
+        [ProducesResponseType(200, Type = typeof(AttractionDto))]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<Activity>> GetActivity(int id)
+        public async Task<ActionResult<ActivityDto>> GetActivity(int id)
         {
             if (!await _attractionRepository.AttractionExists(id))
                 return NotFound(ModelState);
-            var events = await _attractionRepository.GetAttraction(id);
+            var attractionDto = _mapper.Map<AttractionDto>(await _attractionRepository.GetAttraction(id));
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return Ok(events);
+            return Ok(attractionDto);
         }
 
         [HttpGet("{name}")]
-        [ProducesResponseType(200, Type = typeof(List<Attraction>))]
-        public async Task<ActionResult<List<Attraction>>> GetAttractions(string name)
+        [ProducesResponseType(200, Type = typeof(List<AttractionDto>))]
+        public async Task<ActionResult<List<AttractionDto>>> GetAttractions(string name)
         {
-            var attractions = await _attractionRepository.GetAttractions(name);
+            var attractionDtos = _mapper.Map<List<AttractionDto>>(await _attractionRepository.GetAttractions(name));
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return Ok(attractions);
+            return Ok(attractionDtos);
         }
 
         [HttpPost]

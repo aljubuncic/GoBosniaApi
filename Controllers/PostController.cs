@@ -35,7 +35,7 @@ namespace GoTravnikApi.Controllers
         }
 
         [HttpGet("{id:int}")]
-        [ProducesResponseType(200, Type = typeof(AccommodationDto))]
+        [ProducesResponseType(200, Type = typeof(PostDto))]
         [ProducesResponseType(404)]
         public async Task<ActionResult<PostDto>> GetPost(int id)
         {

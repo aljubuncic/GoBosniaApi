@@ -26,15 +26,15 @@ namespace GoTravnikApi.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(List<Activity>))]
-        public async Task<ActionResult<List<Activity>>> GetActivities()
+        [ProducesResponseType(200, Type = typeof(List<ActivityDto>))]
+        public async Task<ActionResult<List<ActivityDto>>> GetActivities()
         {
-            var events = await _activityRepository.GetActivities();
+            var activityDtos = await _activityRepository.GetActivities();
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return Ok(events);
+            return Ok(activityDtos);
         }
 
         [HttpGet("{id:int}")]
@@ -44,30 +44,30 @@ namespace GoTravnikApi.Controllers
         {
             if (!await _activityRepository.ActivityExists(id))
                 return NotFound(ModelState);
-            var events = await _activityRepository.GetActivity(id);
+            var activityDto = _mapper.Map<ActivityDto> (await _activityRepository.GetActivity(id));
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return Ok(events);
+            return Ok(activityDto);
         }
 
         [HttpGet("{name}")]
-        [ProducesResponseType(200, Type = typeof(List<Activity>))]
-        public async Task<ActionResult<List<Activity>>> GetActivities(string name)
+        [ProducesResponseType(200, Type = typeof(List<ActivityDto>))]
+        public async Task<ActionResult<List<ActivityDto>>> GetActivities(string name)
         {
-            var activities = await _activityRepository.GetActivities(name);
+            var activitiyDtos = _mapper.Map<List<ActivityDto>>(await _activityRepository.GetActivities(name));
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return Ok(activities);
+            return Ok(activitiyDtos);
         }
 
         [HttpPost("{sortOption}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult<List<AccommodationDto>>> GetFilteredAndOrderedActivities([FromBody] List<string> subcategoryNames, string sortOption)
+        public async Task<ActionResult<List<ActivityDto>>> GetFilteredAndOrderedActivities([FromBody] List<string> subcategoryNames, string sortOption)
         {
             var activityDtos = _mapper.Map<List<ActivityDto>>(await _activityRepository.FilterAndOrderActivities(subcategoryNames, sortOption));
 

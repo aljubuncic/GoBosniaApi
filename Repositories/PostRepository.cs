@@ -32,12 +32,19 @@ namespace GoTravnikApi.Repositories
 
         public async Task<Post> GetPost(int id)
         {
-            return await _dataContext.Post.Where(fad => fad.Id == id).FirstOrDefaultAsync();
+            return await _dataContext.Post
+                .Where(fad => fad.Id == id)
+                .Include(fad => fad.Location)
+                .Include(fad => fad.Subcategories)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<List<Post>> GetPosts()
         {
-            return await _dataContext.Post.ToListAsync();
+            return await _dataContext.Post
+                .Include(fad => fad.Location)
+                .Include(fad => fad.Subcategories)
+                .ToListAsync();
         }
 
         public async Task<bool> Save()
@@ -50,6 +57,7 @@ namespace GoTravnikApi.Repositories
         {
             return _dataContext.Post
                 .Where(x =>  x.Subcategories.Any(s => s.Name == subcategoryName) == true)
+                .Include(fad => fad.Location)
                 .ToListAsync();
         }
     }

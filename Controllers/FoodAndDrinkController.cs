@@ -140,7 +140,7 @@ namespace GoTravnikApi.Controllers
 
             var foodAndDrink = await _foodAndDrinkRepository.GetFoodAndDrink(foodAndDrinkId);
             var rating = _mapper.Map<Rating>(ratingDto);
-            Console.WriteLine($"Mapped Rating: Id={rating.Id}, Value={rating.Value}, ...");
+            
             foodAndDrink.Ratings.Add(rating);
 
             if (!await _ratingRepository.AddRating(rating))

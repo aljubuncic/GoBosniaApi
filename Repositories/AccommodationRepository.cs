@@ -60,7 +60,6 @@ namespace GoTravnikApi.Repository
             return await _dataContext.Accommodation
             .Include(x => x.Location)
             .Include(x => x.Ratings)
-            .Include(x => x.Subcategories)
             .ToListAsync();
         }
 
@@ -70,7 +69,6 @@ namespace GoTravnikApi.Repository
                 .Where(a => a.Name.ToLower().Contains(searchName.ToLower()))
                 .Include(x => x.Location)
                 .Include(x => x.Ratings)
-                .Include(x => x.Subcategories)
                 .ToListAsync();
         }
 

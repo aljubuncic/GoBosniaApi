@@ -24,42 +24,41 @@ namespace GoTravnikApi.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(List<Event>))]
-        public async Task<ActionResult<List<Event>>> GetEvents() 
+        [ProducesResponseType(200, Type = typeof(List<EventDto>))]
+        public async Task<ActionResult<List<EventDto>>> GetEvents() 
         {
-            var events = await _eventRepository.GetEvents();
+            var eventDtos = _mapper.Map<List<EventDto>>(await _eventRepository.GetEvents());
 
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
             
-            return Ok(events);
+            return Ok(eventDtos);
         }
 
         [HttpGet("{id:int}")]
-        [ProducesResponseType(200, Type = typeof(Event))]
+        [ProducesResponseType(200, Type = typeof(EventDto))]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<Event>> GetEvent(int id)
+        public async Task<ActionResult<EventDto>> GetEvent(int id)
         {
             if(!await _eventRepository.EventExists(id)) 
                 return NotFound(ModelState);
-            var events = await _eventRepository.GetEvent(id);
+            var eventDto = _mapper.Map<EventDto>(await _eventRepository.GetEvent(id));
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return Ok(events);
+            return Ok(eventDto);
         }
 
         [HttpGet("{name}")]
         [ProducesResponseType(200, Type = typeof(List<Event>))]
         public async Task<ActionResult<List<Event>>> GetEvents(string name)
         {
-            var events = await _eventRepository.GetEvents(name);
-
+            var eventDtos = _mapper.Map<List<EventDto>>(await _eventRepository.GetEvents(name));
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return Ok(events);
+            return Ok(eventDtos);
         }
 
         [HttpPost]
