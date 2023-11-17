@@ -67,7 +67,7 @@ namespace GoTravnikApi.Controllers
             return Ok(foodAndDrinkDtos);
         }
 
-        [HttpPost("{sortOption}")]
+        [HttpPost("filter/{sortOption}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public async Task<ActionResult<List<FoodAndDrinkDto>>> GetFilteredAndOrderedFoodAndDrinks([FromBody] List<string> subcategoryNames, string sortOption)
