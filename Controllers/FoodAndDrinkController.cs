@@ -67,13 +67,13 @@ namespace GoTravnikApi.Controllers
             return Ok(foodAndDrinkDtos);
         }
 
-        [HttpPost("filter/{sortOption}")]
+        [HttpGet("filter")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult<List<FoodAndDrinkDto>>> GetFilteredAndOrderedFoodAndDrinks([FromBody] List<string> subcategoryNames, string sortOption)
+        public async Task<ActionResult<List<FoodAndDrinkDto>>> GetFilteredAndOrderedFoodAndDrinks([FromQuery] List<string> subcategory, [FromQuery] string? sortOption)
         {
 
-            var foodAndDrinkDtos = _mapper.Map<List<FoodAndDrinkDto>>(await _foodAndDrinkRepository.FilterAndOrderFoodAndDrinks(subcategoryNames, sortOption));
+            var foodAndDrinkDtos = _mapper.Map<List<FoodAndDrinkDto>>(await _foodAndDrinkRepository.FilterAndOrderFoodAndDrinks(subcategory, sortOption));
             
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

@@ -60,14 +60,14 @@ namespace GoTravnikApi.Controllers
             return Ok(attractionDtos);
         }
 
-        [HttpPost("filter")]
+        [HttpGet("filter")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult<List<AttractionDto>>> GetFilteredAttractions([FromBody] List<string> subcategoryNames)
+        public async Task<ActionResult<List<AttractionDto>>> GetFilteredAttractions([FromQuery] List<string> subcategory)
         {
 
             var attractionDtos = _mapper.Map<List<AttractionDto>>(await _attractionRepository
-                .FilterAttractions(subcategoryNames));
+                .FilterAttractions(subcategory));
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
