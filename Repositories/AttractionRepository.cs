@@ -56,5 +56,14 @@ namespace GoTravnikApi.Repository
             var saved = await _dataContext.SaveChangesAsync();
             return saved > 0;
         }
+
+        public async Task<List<Attraction>> FilterAttractions(List<string> subcategoryNames)
+        {
+            var query = _dataContext.Attraction.AsQueryable();
+            foreach (var subcategory in subcategoryNames)
+                query = query.Where(e => e.Subcategories.Any(sub => sub.Name == subcategory) == true);
+
+            return await query.ToListAsync();
+        }
     }
 }
