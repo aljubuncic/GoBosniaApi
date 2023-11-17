@@ -9,7 +9,7 @@ namespace GoTravnikApi.Interfaces
 
         public Task<Event> GetEvent(int id);
 
-        public Task<List<Event>> GetEvents(DateTime startDate, DateTime endDate);
+        public Task<List<Event>> FilterEvents(List<string> subcategoryNames, DateTime startDate, DateTime endDate);
         
         public Task<bool> EventExists(int id);
 

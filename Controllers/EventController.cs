@@ -61,6 +61,21 @@ namespace GoTravnikApi.Controllers
             return Ok(eventDtos);
         }
 
+        [HttpPost("filter")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<ActionResult<List<EventDto>>> GetFilteredEvents([FromBody] EventTripPlannerDto eventTripPlannerDto)
+        {
+
+            var eventDtos = _mapper.Map<List<EventDto>>(await _eventRepository
+                .FilterEvents(eventTripPlannerDto.SubcategoryNames, eventTripPlannerDto.StartDate, eventTripPlannerDto.EndDate));
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(eventDtos);
+        }
+
         [HttpPost]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]

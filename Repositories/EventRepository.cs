@@ -36,9 +36,13 @@ namespace GoTravnikApi.Repository
                 .ToListAsync();
         }
 
-        public async Task<List<Event>> GetEvents(DateTime startDate, DateTime endDate)
+        public async Task<List<Event>> FilterEvents(List<string> subcategoryNames, DateTime startDate, DateTime endDate)
         {
-            return await _dataContext.Event
+            var query = _dataContext.Event.AsQueryable();
+            foreach (var subcategory in subcategoryNames)
+                query = query.Where(e => e.Subcategories.Any(sub => sub.Name == subcategory) == true);
+
+            return await query
                 .Where(e => e.startDate >= startDate && e.endDate <= endDate)
                 .Include(e => e.Ratings)
                 .Include(e => e.Location)
