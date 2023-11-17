@@ -10,6 +10,7 @@ namespace GoTravnikApi.Interfaces
         public Task<List<Activity>> FilterAndOrderActivities(List<string> subcategoryNames, string sortOption);
         public Task<bool> ActivityExists(int id);
         public Task<bool> AddActivity(Activity activity);
+        public Task<bool> UpdateActivity(Activity activity);
 
         public Task<bool> Save();
     }

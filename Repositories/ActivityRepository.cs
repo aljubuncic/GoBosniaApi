@@ -63,5 +63,11 @@ namespace GoTravnikApi.Repository
                 .Include(a => a.Ratings)
                 .ToListAsync();
         }
+
+        public Task<bool> UpdateActivity(Activity activity)
+        {
+            _dataContext.Update(activity);
+            return Save();
+        }
     }
 }
