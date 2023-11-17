@@ -15,51 +15,56 @@ namespace GoTravnikApi.Controllers
     {
         private readonly IFoodAndDrinkRepository _foodAndDrinkRepository;
         private readonly ISubcategoryRepository _subcategoryRepository;
+        private readonly IRatingRepository _ratingRepository;
         private readonly IMapper _mapper;
-        public FoodAndDrinkController(IFoodAndDrinkRepository foodAndDrinkRepository, ISubcategoryRepository subcategoryRepository, IMapper mapper)
+        public FoodAndDrinkController(IFoodAndDrinkRepository foodAndDrinkRepository, ISubcategoryRepository subcategoryRepository, IRatingRepository ratingRepository, IMapper mapper)
         {
             _foodAndDrinkRepository = foodAndDrinkRepository;
             _subcategoryRepository = subcategoryRepository;
+            _foodAndDrinkRepository = foodAndDrinkRepository;
+            _ratingRepository = ratingRepository;   
             _mapper = mapper;
         }
 
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(List<FoodAndDrink>))]
-        public async Task<ActionResult<List<FoodAndDrink>>> GetFoodAndDrinks()
+        [ProducesResponseType(200, Type = typeof(List<FoodAndDrinkDto>))]
+        public async Task<ActionResult<List<FoodAndDrinkDto>>> GetFoodAndDrinks()
         {
-            var events = await _foodAndDrinkRepository.GetFoodAndDrinks();
+            var foodAndDrinkDtos = _mapper.Map<List<FoodAndDrinkDto>>(await _foodAndDrinkRepository.GetFoodAndDrinks());
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return Ok(events);
+            return Ok(foodAndDrinkDtos);
         }
 
         [HttpGet("{id:int}")]
-        [ProducesResponseType(200, Type = typeof(FoodAndDrink))]
+        [ProducesResponseType(200, Type = typeof(FoodAndDrinkDto))]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<FoodAndDrink>> GetFoodAndDrink(int id)
+        public async Task<ActionResult<FoodAndDrinkDto>> GetFoodAndDrink(int id)
         {
             if (!await _foodAndDrinkRepository.FoodAndDrinkExists(id))
                 return NotFound(ModelState);
-            var foodAndDrinks = await _foodAndDrinkRepository.GetFoodAndDrink(id);
+            var foodAndDrinkDto = _mapper.Map<FoodAndDrinkDto>(await _foodAndDrinkRepository.GetFoodAndDrink(id));
+
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return Ok(foodAndDrinks);
+            return Ok(foodAndDrinkDto);
         }
 
         [HttpGet("{name}")]
-        [ProducesResponseType(200, Type = typeof(List<FoodAndDrink>))]
-        public async Task<ActionResult<List<FoodAndDrink>>> GetFoodAndDrinks(string name)
+        [ProducesResponseType(200, Type = typeof(List<FoodAndDrinkDto>))]
+        public async Task<ActionResult<List<FoodAndDrinkDto>>> GetFoodAndDrinks(string name)
         {
-            var foodAndDrinks = await _foodAndDrinkRepository.GetFoodAndDrinks(name);
+            var foodAndDrinkDtos = _mapper.Map<List<FoodAndDrinkDto>>(await _foodAndDrinkRepository.GetFoodAndDrinks(name));
+
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return Ok(foodAndDrinks);
+            return Ok(foodAndDrinkDtos);
         }
 
         [HttpPost("{sortOption}")]
@@ -113,6 +118,44 @@ namespace GoTravnikApi.Controllers
             }
 
             return Ok("Succesfully added");
+
+        }
+
+        [HttpPost("rating/{foodAndDrinkId:int}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<ActionResult> AddRating(int foodAndDrinkId, [FromBody] RatingDtoRequest ratingDto)
+        {
+            if (ratingDto == null)
+                return BadRequest(ModelState);
+
+            if (!await _foodAndDrinkRepository.FoodAndDrinkExists(foodAndDrinkId))
+            {
+                ModelState.AddModelError("error", "FoodAndDrink does not exist in the database");
+                return StatusCode(400, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var foodAndDrink = await _foodAndDrinkRepository.GetFoodAndDrink(foodAndDrinkId);
+            var rating = _mapper.Map<Rating>(ratingDto);
+            Console.WriteLine($"Mapped Rating: Id={rating.Id}, Value={rating.Value}, ...");
+            foodAndDrink.Ratings.Add(rating);
+
+            if (!await _ratingRepository.AddRating(rating))
+            {
+                ModelState.AddModelError("error", "Database updating error");
+                return StatusCode(500, ModelState);
+            }
+
+            if (!await _foodAndDrinkRepository.UpdateFoodAndDrink(foodAndDrink))
+            {
+                ModelState.AddModelError("error", "Database updating error");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Successfully added");
 
         }
     }

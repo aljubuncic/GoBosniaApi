@@ -2,6 +2,7 @@
 using GoTravnikApi.Interfaces;
 using GoTravnikApi.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace GoTravnikApi.Repositories
 {
@@ -47,23 +48,41 @@ namespace GoTravnikApi.Repositories
 
         public async Task<FoodAndDrink> GetFoodAndDrink(int id)
         {
-            return await _dataContext.FoodAndDrink.Where(fad => fad.Id == id).FirstOrDefaultAsync();
+            return await _dataContext.FoodAndDrink
+                .Where(fad => fad.Id == id)
+                .Include(fad => fad.Ratings)
+                .Include(fad => fad.Subcategories)
+                .Include(fad => fad.Location)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<List<FoodAndDrink>> GetFoodAndDrinks()
         {
-            return await _dataContext.FoodAndDrink.ToListAsync();
+            return await _dataContext.FoodAndDrink
+                .Include(x => x.Location)
+                .Include(x => x.Ratings)
+                .ToListAsync();
         }
 
         public async Task<List<FoodAndDrink>> GetFoodAndDrinks(string searchName)
         {
-            return await _dataContext.FoodAndDrink.Where(a => a.Name.ToLower().Contains(searchName.ToLower())).ToListAsync();
+            return await _dataContext.FoodAndDrink.
+                Where(a => a.Name.ToLower().Contains(searchName.ToLower()))
+                .Include(x => x.Location)
+                .Include(x => x.Ratings)
+                .ToListAsync();
         }
 
         public async Task<bool> Save()
         {
             var saved = await _dataContext.SaveChangesAsync();
             return saved > 0;
+        }
+
+        public Task<bool> UpdateFoodAndDrink(FoodAndDrink foodAndDrink)
+        {
+            _dataContext.Update(foodAndDrink);
+            return Save();
         }
     }
 }

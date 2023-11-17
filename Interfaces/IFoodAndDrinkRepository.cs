@@ -10,6 +10,7 @@ namespace GoTravnikApi.Interfaces
         public Task<bool> FoodAndDrinkExists(int id);
         public Task<bool> AddFoodAndDrink(FoodAndDrink foodAndDrink);
         public Task<List<FoodAndDrink>> FilterAndOrderFoodAndDrinks(List<string> subcategoryNames, string sortOption);
+        public Task<bool> UpdateFoodAndDrink(FoodAndDrink foodAndDrink);
         public Task<bool> Save();
     }
 }
