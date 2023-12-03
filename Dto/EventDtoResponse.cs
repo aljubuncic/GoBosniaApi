@@ -1,11 +1,11 @@
 ﻿namespace GoTravnikApi.Dto
 {
-    public class EventDto : TouristContentDto
+    public class EventDtoResponse : TouristContentDtoResponse
     {
         public DateTime startDate { get; set; }
         public DateTime endDate { get; set; }
 
-        public EventDto()
+        public EventDtoResponse()
         {
         }
     }

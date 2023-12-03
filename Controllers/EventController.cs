@@ -24,10 +24,10 @@ namespace GoTravnikApi.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(List<EventDto>))]
-        public async Task<ActionResult<List<EventDto>>> GetEvents() 
+        [ProducesResponseType(200, Type = typeof(List<EventDtoResponse>))]
+        public async Task<ActionResult<List<EventDtoResponse>>> GetEvents() 
         {
-            var eventDtos = _mapper.Map<List<EventDto>>(await _eventRepository.GetEvents());
+            var eventDtos = _mapper.Map<List<EventDtoResponse>>(await _eventRepository.GetEvents());
 
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -36,13 +36,13 @@ namespace GoTravnikApi.Controllers
         }
 
         [HttpGet("{id:int}")]
-        [ProducesResponseType(200, Type = typeof(EventDto))]
+        [ProducesResponseType(200, Type = typeof(EventDtoResponse))]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<EventDto>> GetEvent(int id)
+        public async Task<ActionResult<EventDtoResponse>> GetEvent(int id)
         {
             if(!await _eventRepository.EventExists(id)) 
                 return NotFound(ModelState);
-            var eventDto = _mapper.Map<EventDto>(await _eventRepository.GetEvent(id));
+            var eventDto = _mapper.Map<EventDtoResponse>(await _eventRepository.GetEvent(id));
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -54,7 +54,7 @@ namespace GoTravnikApi.Controllers
         [ProducesResponseType(200, Type = typeof(List<Event>))]
         public async Task<ActionResult<List<Event>>> GetEvents(string name)
         {
-            var eventDtos = _mapper.Map<List<EventDto>>(await _eventRepository.GetEvents(name));
+            var eventDtos = _mapper.Map<List<EventDtoResponse>>(await _eventRepository.GetEvents(name));
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
@@ -64,10 +64,10 @@ namespace GoTravnikApi.Controllers
         [HttpGet("filter")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult<List<EventDto>>> GetFilteredEvents([FromQuery] List<string> subcategory, [FromQuery] DateTime start, [FromQuery] DateTime end)
+        public async Task<ActionResult<List<EventDtoResponse>>> GetFilteredEvents([FromQuery] List<string> subcategory, [FromQuery] DateTime start, [FromQuery] DateTime end)
         {
 
-            var eventDtos = _mapper.Map<List<EventDto>>(await _eventRepository
+            var eventDtos = _mapper.Map<List<EventDtoResponse>>(await _eventRepository
                 .FilterEvents(subcategory, start, end));
 
             if (!ModelState.IsValid)
@@ -79,15 +79,15 @@ namespace GoTravnikApi.Controllers
         [HttpPost]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult> AddEvent([FromBody] EventDto eventDto)
+        public async Task<ActionResult> AddEvent([FromBody] EventDtoRequest eventDtoRequest)
         {
-            if (eventDto == null)
+            if (eventDtoRequest == null)
                 return BadRequest(ModelState);
 
-            if (eventDto.Location == null)
+            if (eventDtoRequest.Location == null)
                 return BadRequest(ModelState);
 
-            if (!await _subcategoryRepository.SubcategoriesExist(eventDto.Subcategories.Select(x => x.Name).ToList()))
+            if (!await _subcategoryRepository.SubcategoriesExist(eventDtoRequest.Subcategories.Select(x => x.Name).ToList()))
             {
                 ModelState.AddModelError("error", "Subcategory does not exist in the database");
                 return StatusCode(400, ModelState);
@@ -98,12 +98,12 @@ namespace GoTravnikApi.Controllers
 
             List<Subcategory> subcategories = new List<Subcategory>();
 
-            foreach (var subcategoryDto in eventDto.Subcategories)
+            foreach (var subcategoryDto in eventDtoRequest.Subcategories)
             {
                 var subcategory = await _subcategoryRepository.GetSubcategory(subcategoryDto.Name);
                 subcategories.Add(subcategory);
             }
-            Event _event = _mapper.Map<Event>(eventDto);
+            Event _event = _mapper.Map<Event>(eventDtoRequest);
             _event.Subcategories = subcategories;
 
             if (!await _eventRepository.AddEvent(_event))
