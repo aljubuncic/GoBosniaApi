@@ -41,6 +41,11 @@ namespace GoTravnikApi.Helper
             CreateMap<Event, EventDtoRequest>();
             CreateMap<EventDtoRequest, Event>();
 
+            CreateMap<FoodAndDrink, FoodAndDrinkDtoResponse>();
+            CreateMap<FoodAndDrinkDtoResponse, FoodAndDrink>();
+            CreateMap<FoodAndDrink, FoodAndDrinkDtoRequest>();
+            CreateMap<FoodAndDrinkDtoRequest, FoodAndDrink>();
+
             
         }
     }

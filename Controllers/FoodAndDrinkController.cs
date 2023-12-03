@@ -27,10 +27,10 @@ namespace GoTravnikApi.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(List<FoodAndDrinkDto>))]
-        public async Task<ActionResult<List<FoodAndDrinkDto>>> GetFoodAndDrinks()
+        [ProducesResponseType(200, Type = typeof(List<FoodAndDrinkDtoResponse>))]
+        public async Task<ActionResult<List<FoodAndDrinkDtoResponse>>> GetFoodAndDrinks()
         {
-            var foodAndDrinkDtos = _mapper.Map<List<FoodAndDrinkDto>>(await _foodAndDrinkRepository.GetFoodAndDrinks());
+            var foodAndDrinkDtos = _mapper.Map<List<FoodAndDrinkDtoResponse>>(await _foodAndDrinkRepository.GetFoodAndDrinks());
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -39,13 +39,13 @@ namespace GoTravnikApi.Controllers
         }
 
         [HttpGet("{id:int}")]
-        [ProducesResponseType(200, Type = typeof(FoodAndDrinkDto))]
+        [ProducesResponseType(200, Type = typeof(FoodAndDrinkDtoResponse))]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<FoodAndDrinkDto>> GetFoodAndDrink(int id)
+        public async Task<ActionResult<FoodAndDrinkDtoResponse>> GetFoodAndDrink(int id)
         {
             if (!await _foodAndDrinkRepository.FoodAndDrinkExists(id))
                 return NotFound(ModelState);
-            var foodAndDrinkDto = _mapper.Map<FoodAndDrinkDto>(await _foodAndDrinkRepository.GetFoodAndDrink(id));
+            var foodAndDrinkDto = _mapper.Map<FoodAndDrinkDtoResponse>(await _foodAndDrinkRepository.GetFoodAndDrink(id));
 
 
             if (!ModelState.IsValid)
@@ -55,10 +55,10 @@ namespace GoTravnikApi.Controllers
         }
 
         [HttpGet("{name}")]
-        [ProducesResponseType(200, Type = typeof(List<FoodAndDrinkDto>))]
-        public async Task<ActionResult<List<FoodAndDrinkDto>>> GetFoodAndDrinks(string name)
+        [ProducesResponseType(200, Type = typeof(List<FoodAndDrinkDtoResponse>))]
+        public async Task<ActionResult<List<FoodAndDrinkDtoResponse>>> GetFoodAndDrinks(string name)
         {
-            var foodAndDrinkDtos = _mapper.Map<List<FoodAndDrinkDto>>(await _foodAndDrinkRepository.GetFoodAndDrinks(name));
+            var foodAndDrinkDtos = _mapper.Map<List<FoodAndDrinkDtoResponse>>(await _foodAndDrinkRepository.GetFoodAndDrinks(name));
 
 
             if (!ModelState.IsValid)
@@ -70,10 +70,10 @@ namespace GoTravnikApi.Controllers
         [HttpGet("filter")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult<List<FoodAndDrinkDto>>> GetFilteredAndOrderedFoodAndDrinks([FromQuery] List<string> subcategory, [FromQuery] string? sortOption)
+        public async Task<ActionResult<List<FoodAndDrinkDtoResponse>>> GetFilteredAndOrderedFoodAndDrinks([FromQuery] List<string> subcategory, [FromQuery] string? sortOption)
         {
 
-            var foodAndDrinkDtos = _mapper.Map<List<FoodAndDrinkDto>>(await _foodAndDrinkRepository.FilterAndOrderFoodAndDrinks(subcategory, sortOption));
+            var foodAndDrinkDtos = _mapper.Map<List<FoodAndDrinkDtoResponse>>(await _foodAndDrinkRepository.FilterAndOrderFoodAndDrinks(subcategory, sortOption));
             
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -84,15 +84,15 @@ namespace GoTravnikApi.Controllers
         [HttpPost]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult> AddFoodAndDrink([FromBody] FoodAndDrinkDto foodAndDrinkDto)
+        public async Task<ActionResult> AddFoodAndDrink([FromBody] FoodAndDrinkDtoRequest foodAndDrinkDtoRequest)
         {
-            if (foodAndDrinkDto == null)
+            if (foodAndDrinkDtoRequest == null)
                 return BadRequest(ModelState);
 
-            if (foodAndDrinkDto.Location == null)
+            if (foodAndDrinkDtoRequest.Location == null)
                 return BadRequest(ModelState);
 
-            if (!await _subcategoryRepository.SubcategoriesExist(foodAndDrinkDto.Subcategories.Select(x => x.Name).ToList()))
+            if (!await _subcategoryRepository.SubcategoriesExist(foodAndDrinkDtoRequest.Subcategories.Select(x => x.Name).ToList()))
             {
                 ModelState.AddModelError("error", "Subcategory does not exist in the database");
                 return StatusCode(400, ModelState);
@@ -103,12 +103,12 @@ namespace GoTravnikApi.Controllers
 
             List<Subcategory> subcategories = new List<Subcategory>();
 
-            foreach (var subcategoryDto in foodAndDrinkDto.Subcategories)
+            foreach (var subcategoryDto in foodAndDrinkDtoRequest.Subcategories)
             {
                 var subcategory = await _subcategoryRepository.GetSubcategory(subcategoryDto.Name);
                 subcategories.Add(subcategory);
             }
-            FoodAndDrink foodAndDrink = _mapper.Map<FoodAndDrink>(foodAndDrinkDto);
+            FoodAndDrink foodAndDrink = _mapper.Map<FoodAndDrink>(foodAndDrinkDtoRequest);
             foodAndDrink.Subcategories = subcategories;
 
             if (!await _foodAndDrinkRepository.AddFoodAndDrink(foodAndDrink))
@@ -124,9 +124,9 @@ namespace GoTravnikApi.Controllers
         [HttpPost("rating/{foodAndDrinkId:int}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult> AddRating(int foodAndDrinkId, [FromBody] RatingDtoRequest ratingDto)
+        public async Task<ActionResult> AddRating(int foodAndDrinkId, [FromBody] RatingDtoRequest ratingDtoRequest)
         {
-            if (ratingDto == null)
+            if (ratingDtoRequest == null)
                 return BadRequest(ModelState);
 
             if (!await _foodAndDrinkRepository.FoodAndDrinkExists(foodAndDrinkId))
@@ -139,7 +139,7 @@ namespace GoTravnikApi.Controllers
                 return BadRequest(ModelState);
 
             var foodAndDrink = await _foodAndDrinkRepository.GetFoodAndDrink(foodAndDrinkId);
-            var rating = _mapper.Map<Rating>(ratingDto);
+            var rating = _mapper.Map<Rating>(ratingDtoRequest);
             
             foodAndDrink.Ratings.Add(rating);
 
