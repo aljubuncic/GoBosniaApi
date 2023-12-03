@@ -31,6 +31,11 @@ namespace GoTravnikApi.Helper
             CreateMap<Attraction, AttractionDtoRequest>();
             CreateMap<AttractionDtoRequest, Attraction>();
 
+            CreateMap<Activity, ActivityDtoResponse>();
+            CreateMap<ActivityDtoResponse, Activity>();
+            CreateMap<Activity, ActivityDtoRequest>();
+            CreateMap<ActivityDtoRequest, Activity>();
+
             
         }
     }

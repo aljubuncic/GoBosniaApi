@@ -26,8 +26,8 @@ namespace GoTravnikApi.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(List<ActivityDto>))]
-        public async Task<ActionResult<List<ActivityDto>>> GetActivities()
+        [ProducesResponseType(200, Type = typeof(List<ActivityDtoResponse>))]
+        public async Task<ActionResult<List<ActivityDtoResponse>>> GetActivities()
         {
             var activityDtos = await _activityRepository.GetActivities();
 
@@ -38,13 +38,13 @@ namespace GoTravnikApi.Controllers
         }
 
         [HttpGet("{id:int}")]
-        [ProducesResponseType(200, Type = typeof(Activity))]
+        [ProducesResponseType(200, Type = typeof(ActivityDtoResponse))]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<Activity>> GetActivity(int id)
+        public async Task<ActionResult<ActivityDtoResponse>> GetActivity(int id)
         {
             if (!await _activityRepository.ActivityExists(id))
                 return NotFound(ModelState);
-            var activityDto = _mapper.Map<ActivityDto> (await _activityRepository.GetActivity(id));
+            var activityDto = _mapper.Map<ActivityDtoResponse> (await _activityRepository.GetActivity(id));
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -53,10 +53,10 @@ namespace GoTravnikApi.Controllers
         }
 
         [HttpGet("{name}")]
-        [ProducesResponseType(200, Type = typeof(List<ActivityDto>))]
-        public async Task<ActionResult<List<ActivityDto>>> GetActivities(string name)
+        [ProducesResponseType(200, Type = typeof(List<ActivityDtoResponse>))]
+        public async Task<ActionResult<List<ActivityDtoResponse>>> GetActivities(string name)
         {
-            var activitiyDtos = _mapper.Map<List<ActivityDto>>(await _activityRepository.GetActivities(name));
+            var activitiyDtos = _mapper.Map<List<ActivityDtoResponse>>(await _activityRepository.GetActivities(name));
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -67,9 +67,9 @@ namespace GoTravnikApi.Controllers
         [HttpGet("filter")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult<List<ActivityDto>>> GetFilteredAndOrderedActivities([FromQuery] List<string> subcategory,[FromQuery] string? sortOption)
+        public async Task<ActionResult<List<ActivityDtoResponse>>> GetFilteredAndOrderedActivities([FromQuery] List<string> subcategory,[FromQuery] string? sortOption)
         {
-            var activityDtos = _mapper.Map<List<ActivityDto>>(await _activityRepository.FilterAndOrderActivities(subcategory, sortOption));
+            var activityDtos = _mapper.Map<List<ActivityDtoResponse>>(await _activityRepository.FilterAndOrderActivities(subcategory, sortOption));
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -80,15 +80,15 @@ namespace GoTravnikApi.Controllers
         [HttpPost]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult> AddActivity([FromBody] ActivityDto activityDto)
+        public async Task<ActionResult> AddActivity([FromBody] ActivityDtoRequest activityDtoRequest)
         {
-            if (activityDto == null)
+            if (activityDtoRequest == null)
                 return BadRequest(ModelState);
 
-            if (activityDto.Location == null)
+            if (activityDtoRequest.Location == null)
                 return BadRequest(ModelState);
 
-            if (!await _subcategoryRepository.SubcategoriesExist(activityDto.Subcategories.Select(x => x.Name).ToList()))
+            if (!await _subcategoryRepository.SubcategoriesExist(activityDtoRequest.Subcategories.Select(x => x.Name).ToList()))
             {
                 ModelState.AddModelError("error", "Subcategory does not exist in the database");
                 return StatusCode(400, ModelState);
@@ -99,12 +99,12 @@ namespace GoTravnikApi.Controllers
 
             List<Subcategory> subcategories = new List<Subcategory>();
 
-            foreach (var subcategoryDto in activityDto.Subcategories)
+            foreach (var subcategoryDto in activityDtoRequest.Subcategories)
             {
                 var subcategory = await _subcategoryRepository.GetSubcategory(subcategoryDto.Name);
                 subcategories.Add(subcategory);
             }
-            Activity activity = _mapper.Map<Activity>(activityDto);
+            Activity activity = _mapper.Map<Activity>(activityDtoRequest);
             activity.Subcategories = subcategories;
 
             if (!await _activityRepository.AddActivity(activity))
@@ -120,9 +120,9 @@ namespace GoTravnikApi.Controllers
         [HttpPost("rating/{activityId:int}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult> AddRating(int activityId, [FromBody] RatingDtoRequest ratingDto)
+        public async Task<ActionResult> AddRating(int activityId, [FromBody] RatingDtoRequest ratingDtoRequest)
         {
-            if (ratingDto == null)
+            if (ratingDtoRequest == null)
                 return BadRequest(ModelState);
 
             if (!await _activityRepository.ActivityExists(activityId))
@@ -135,7 +135,7 @@ namespace GoTravnikApi.Controllers
                 return BadRequest(ModelState);
 
             var activity = await _activityRepository.GetActivity(activityId);
-            var rating = _mapper.Map<Rating>(ratingDto);
+            var rating = _mapper.Map<Rating>(ratingDtoRequest);
 
             activity.Ratings.Add(rating);
 
