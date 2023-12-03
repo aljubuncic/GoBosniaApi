@@ -11,32 +11,12 @@ namespace GoTravnikApi.Helper
             CreateMap<Subcategory, SubcategoryDto>();
             CreateMap<SubcategoryDto, Subcategory>();
 
-            CreateMap<Accommodation, AccommodationDto>();
-            CreateMap<AccommodationDto, Accommodation>();
+            CreateMap<Accommodation, AccommodationDtoResponse>();
+            CreateMap<AccommodationDtoResponse, Accommodation>();
+            CreateMap<Accommodation, AccommodationDtoRequest>();
+            CreateMap<AccommodationDtoRequest, Accommodation>();
 
-            CreateMap<RatingDtoResponse, Rating>();
-            CreateMap<Rating, RatingDtoResponse>();
-
-            CreateMap<RatingDtoRequest, Rating>();
-            CreateMap<Rating, RatingDtoRequest>();
-
-            CreateMap<TouristContent, TouristContentDto>();
-            CreateMap<TouristContentDto, TouristContent>();
-
-            CreateMap<Attraction, AttractionDto>();
-            CreateMap<AttractionDto, Attraction>();
-
-            CreateMap<Activity, ActivityDto>();
-            CreateMap<ActivityDto, Activity>();
-
-            CreateMap<Event, EventDto>();
-            CreateMap<EventDto, Event>();
-
-            CreateMap<FoodAndDrink, FoodAndDrinkDto>();
-            CreateMap<FoodAndDrinkDto, FoodAndDrink>();
-
-            CreateMap<Post, PostDto>();
-            CreateMap<PostDto, Post>();
+            
         }
     }
 }

@@ -25,10 +25,10 @@ namespace GoTravnikApi.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(List<AccommodationDto>))]
-        public async Task<ActionResult<List<AccommodationDto>>> GetAccommodations()
+        [ProducesResponseType(200, Type = typeof(List<AccommodationDtoResponse>))]
+        public async Task<ActionResult<List<AccommodationDtoResponse>>> GetAccommodations()
         {
-            var accommodationDtos =_mapper.Map<List<AccommodationDto>> (await _accommodationRepository.GetAccomodations());
+            var accommodationDtos =_mapper.Map<List<AccommodationDtoResponse>> (await _accommodationRepository.GetAccomodations());
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -37,13 +37,13 @@ namespace GoTravnikApi.Controllers
         }
 
         [HttpGet("{id:int}")]
-        [ProducesResponseType(200, Type = typeof(AccommodationDto))]
+        [ProducesResponseType(200, Type = typeof(AccommodationDtoResponse))]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<AccommodationDto>> GetAccommodation(int id)
+        public async Task<ActionResult<AccommodationDtoResponse>> GetAccommodation(int id)
         {
             if (!await _accommodationRepository.AccomodationExists(id))
                 return NotFound(ModelState);
-            var accommodationDto =_mapper.Map<AccommodationDto>(await _accommodationRepository.GetAccommodation(id));
+            var accommodationDto =_mapper.Map<AccommodationDtoResponse>(await _accommodationRepository.GetAccommodation(id));
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -52,10 +52,10 @@ namespace GoTravnikApi.Controllers
         }
 
         [HttpGet("{name}")]
-        [ProducesResponseType(200, Type = typeof(List<AccommodationDto>))]
-        public async Task<ActionResult<List<AccommodationDto>>> GetAccommodations(string name)
+        [ProducesResponseType(200, Type = typeof(List<AccommodationDtoResponse>))]
+        public async Task<ActionResult<List<AccommodationDtoResponse>>> GetAccommodations(string name)
         {
-            var accommodationDtos = _mapper.Map<List<AccommodationDto>>(await _accommodationRepository.GetAccomodations(name));
+            var accommodationDtos = _mapper.Map<List<AccommodationDtoResponse>>(await _accommodationRepository.GetAccomodations(name));
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -66,10 +66,10 @@ namespace GoTravnikApi.Controllers
         [HttpPost("filter/{sortOption}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult<List<AccommodationDto>>> GetFilteredAndOrderedActivities([FromBody] List<string> subcategoryNames, string sortOption)
+        public async Task<ActionResult<List<AccommodationDtoResponse>>> GetFilteredAndOrderedActivities([FromBody] List<string> subcategoryNames, string sortOption)
         {
 
-            var accommodationDtos = _mapper.Map<List<AccommodationDto>>(await _accommodationRepository.FilterAndOrderAccommodations(subcategoryNames, sortOption));
+            var accommodationDtos = _mapper.Map<List<AccommodationDtoResponse>>(await _accommodationRepository.FilterAndOrderAccommodations(subcategoryNames, sortOption));
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -80,15 +80,15 @@ namespace GoTravnikApi.Controllers
         [HttpPost]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult> AddAccommodation([FromBody] AccommodationDto accommodationDto)
+        public async Task<ActionResult> AddAccommodation([FromBody] AccommodationDtoRequest accommodationDtoRequest)
         {
-            if(accommodationDto == null)
+            if(accommodationDtoRequest == null)
                 return BadRequest(ModelState);
 
-            if (accommodationDto.Location == null)
+            if (accommodationDtoRequest.Location == null)
                 return BadRequest(ModelState);
 
-            if(!await _subcategoryRepository.SubcategoriesExist(accommodationDto.Subcategories.Select(x => x.Name).ToList()))
+            if(!await _subcategoryRepository.SubcategoriesExist(accommodationDtoRequest.Subcategories.Select(x => x.Name).ToList()))
             {
                 ModelState.AddModelError("error", "Subcategory does not exist in the database");
                 return StatusCode(400, ModelState);
@@ -99,12 +99,12 @@ namespace GoTravnikApi.Controllers
 
             List<Subcategory> subcategories = new List<Subcategory>();
 
-            foreach(var subcategoryDto in accommodationDto.Subcategories)
+            foreach(var subcategoryDto in accommodationDtoRequest.Subcategories)
             {
                 var subcategory = await _subcategoryRepository.GetSubcategory(subcategoryDto.Name);
                 subcategories.Add(subcategory);
             }
-            Accommodation accommodation = _mapper.Map<Accommodation>(accommodationDto);
+            Accommodation accommodation = _mapper.Map<Accommodation>(accommodationDtoRequest);
             accommodation.Subcategories = subcategories;
 
             if (!await _accommodationRepository.AddAccommodation(accommodation))
@@ -120,9 +120,9 @@ namespace GoTravnikApi.Controllers
         [HttpPost("rating/{accommodationId:int}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult> AddRating(int accommodationId, [FromBody] RatingDtoRequest ratingDto)
+        public async Task<ActionResult> AddRating(int accommodationId, [FromBody] RatingDtoRequest ratingDtoRequest)
         {
-            if (ratingDto == null)
+            if (ratingDtoRequest == null)
                 return BadRequest(ModelState);
 
             if(!await _accommodationRepository.AccomodationExists(accommodationId))
@@ -135,7 +135,7 @@ namespace GoTravnikApi.Controllers
                 return BadRequest(ModelState);
 
             var accommodation = await _accommodationRepository.GetAccommodation(accommodationId);
-            var rating = _mapper.Map<Rating>(ratingDto);
+            var rating = _mapper.Map<Rating>(ratingDtoRequest);
 
             accommodation.Ratings.Add(rating);
 
