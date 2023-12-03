@@ -16,6 +16,11 @@ namespace GoTravnikApi.Helper
             CreateMap<Accommodation, AccommodationDtoRequest>();
             CreateMap<AccommodationDtoRequest, Accommodation>();
 
+            CreateMap<RatingDtoResponse, Rating>();
+            CreateMap<Rating, RatingDtoResponse>();
+            CreateMap<RatingDtoRequest, Rating>();
+            CreateMap<Rating, RatingDtoRequest>();
+
             
         }
     }
