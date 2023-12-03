@@ -14,18 +14,6 @@ namespace GoTravnikApi.Models
         {
         }
 
-        public Accommodation(AccommodationDto accommodationDto)
-        {
-            Id = accommodationDto.Id;
-            Name = accommodationDto.Name;
-            Description = accommodationDto.Description;
-            Location = accommodationDto.Location;
-            Image = accommodationDto.Image;
-            Website = accommodationDto.Website;
-            TelephoneNumber = accommodationDto.TelephoneNumber;
-            Ratings = accommodationDto.Ratings;
-        }
-
         public Accommodation(int id, string name, string description, string type, int idRating, Rating rating, Location location, string image, string website, string telephoneNumber)
         {
             Id = id;

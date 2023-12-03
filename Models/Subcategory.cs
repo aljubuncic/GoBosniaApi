@@ -12,12 +12,6 @@ namespace GoTravnikApi.Models
         public string Name { get; set; }
         public List<TouristContent> TouristContents{ get; set; }
 
-        public Subcategory(SubcategoryDto subcategoryDto)
-        {
-            Id = subcategoryDto.Id;
-            Name = subcategoryDto.Name;
-        }
-
         public Subcategory() { }
 
     }
