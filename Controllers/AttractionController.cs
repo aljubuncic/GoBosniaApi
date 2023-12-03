@@ -22,10 +22,10 @@ namespace GoTravnikApi.Controllers
             _mapper = mapper;
         }
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(List<AttractionDto>))]
-        public async Task<ActionResult<List<AttractionDto>>> GetAttractions()
+        [ProducesResponseType(200, Type = typeof(List<AttractionDtoResponse>))]
+        public async Task<ActionResult<List<AttractionDtoResponse>>> GetAttractions()
         {
-            var attractionDtos = _mapper.Map<List<AttractionDto>>(await _attractionRepository.GetAttractions());
+            var attractionDtos = _mapper.Map<List<AttractionDtoResponse>>(await _attractionRepository.GetAttractions());
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -34,13 +34,13 @@ namespace GoTravnikApi.Controllers
         }
 
         [HttpGet("{id:int}")]
-        [ProducesResponseType(200, Type = typeof(AttractionDto))]
+        [ProducesResponseType(200, Type = typeof(AttractionDtoResponse))]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<ActivityDto>> GetActivity(int id)
+        public async Task<ActionResult<AttractionDtoResponse>> GetActivity(int id)
         {
             if (!await _attractionRepository.AttractionExists(id))
                 return NotFound(ModelState);
-            var attractionDto = _mapper.Map<AttractionDto>(await _attractionRepository.GetAttraction(id));
+            var attractionDto = _mapper.Map<AttractionDtoResponse>(await _attractionRepository.GetAttraction(id));
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -49,10 +49,10 @@ namespace GoTravnikApi.Controllers
         }
 
         [HttpGet("{name}")]
-        [ProducesResponseType(200, Type = typeof(List<AttractionDto>))]
-        public async Task<ActionResult<List<AttractionDto>>> GetAttractions(string name)
+        [ProducesResponseType(200, Type = typeof(List<AttractionDtoResponse>))]
+        public async Task<ActionResult<List<AttractionDtoResponse>>> GetAttractions(string name)
         {
-            var attractionDtos = _mapper.Map<List<AttractionDto>>(await _attractionRepository.GetAttractions(name));
+            var attractionDtos = _mapper.Map<List<AttractionDtoResponse>>(await _attractionRepository.GetAttractions(name));
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -63,10 +63,10 @@ namespace GoTravnikApi.Controllers
         [HttpGet("filter")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult<List<AttractionDto>>> GetFilteredAttractions([FromQuery] List<string> subcategory)
+        public async Task<ActionResult<List<AttractionDtoResponse>>> GetFilteredAttractions([FromQuery] List<string> subcategory)
         {
 
-            var attractionDtos = _mapper.Map<List<AttractionDto>>(await _attractionRepository
+            var attractionDtos = _mapper.Map<List<AttractionDtoResponse>>(await _attractionRepository
                 .FilterAttractions(subcategory));
 
             if (!ModelState.IsValid)
@@ -78,15 +78,15 @@ namespace GoTravnikApi.Controllers
         [HttpPost]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult> AddAttraction([FromBody] AttractionDto attractionDto)
+        public async Task<ActionResult> AddAttraction([FromBody] AttractionDtoRequest attractionDtoRequest)
         {
-            if (attractionDto == null)
+            if (attractionDtoRequest == null)
                 return BadRequest(ModelState);
 
-            if (attractionDto.Location == null)
+            if (attractionDtoRequest.Location == null)
                 return BadRequest(ModelState);
 
-            if (!await _subcategoryRepository.SubcategoriesExist(attractionDto.Subcategories.Select(x => x.Name).ToList()))
+            if (!await _subcategoryRepository.SubcategoriesExist(attractionDtoRequest.Subcategories.Select(x => x.Name).ToList()))
             {
                 ModelState.AddModelError("error", "Subcategory does not exist in the database");
                 return StatusCode(400, ModelState);
@@ -97,12 +97,12 @@ namespace GoTravnikApi.Controllers
 
             List<Subcategory> subcategories = new List<Subcategory>();
 
-            foreach (var subcategoryDto in attractionDto.Subcategories)
+            foreach (var subcategoryDto in attractionDtoRequest.Subcategories)
             {
                 var subcategory = await _subcategoryRepository.GetSubcategory(subcategoryDto.Name);
                 subcategories.Add(subcategory);
             }
-            Attraction attraction = _mapper.Map<Attraction>(attractionDto);
+            Attraction attraction = _mapper.Map<Attraction>(attractionDtoRequest);
             attraction.Subcategories = subcategories;
 
             if (!await _attractionRepository.AddAttraction(attraction))
