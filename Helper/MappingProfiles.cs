@@ -51,7 +51,10 @@ namespace GoTravnikApi.Helper
             CreateMap<Post, PostDtoRequest>();
             CreateMap<PostDtoRequest, Post>();
 
-            
+            CreateMap<Location, LocationDtoResponse>();
+            CreateMap<LocationDtoResponse, Location>();
+            CreateMap<Location, LocationDtoRequest>();
+            CreateMap<LocationDtoRequest, Location>();
         }
     }
 }
