@@ -23,10 +23,10 @@ namespace GoTravnikApi.Controllers
             _mapper = mapper;
         }
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(List<PostDto>))]
-        public async Task<ActionResult<List<PostDto>>> GetPosts()
+        [ProducesResponseType(200, Type = typeof(List<PostDtoResponse>))]
+        public async Task<ActionResult<List<PostDtoResponse>>> GetPosts()
         {
-            var postDtos = _mapper.Map<List<PostDto>>(await _postRepository.GetPosts());
+            var postDtos = _mapper.Map<List<PostDtoResponse>>(await _postRepository.GetPosts());
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -35,13 +35,13 @@ namespace GoTravnikApi.Controllers
         }
 
         [HttpGet("{id:int}")]
-        [ProducesResponseType(200, Type = typeof(PostDto))]
+        [ProducesResponseType(200, Type = typeof(PostDtoResponse))]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<PostDto>> GetPost(int id)
+        public async Task<ActionResult<PostDtoResponse>> GetPost(int id)
         {
             if (!await _postRepository.PostExists(id))
                 return NotFound(ModelState);
-            var postDto = _mapper.Map<PostDto>(await _postRepository.GetPost(id));
+            var postDto = _mapper.Map<PostDtoResponse>(await _postRepository.GetPost(id));
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -50,10 +50,10 @@ namespace GoTravnikApi.Controllers
         }
 
         [HttpGet("{subcategoryName}")]
-        [ProducesResponseType(200, Type = typeof(List<PostDto>))]
-        public async Task<ActionResult<List<PostDto>>> GetPosts(string subcategoryName)
+        [ProducesResponseType(200, Type = typeof(List<PostDtoResponse>))]
+        public async Task<ActionResult<List<PostDtoResponse>>> GetPosts(string subcategoryName)
         {
-            var postDtos = _mapper.Map<List<PostDto>>(await _postRepository.GetPosts(subcategoryName));
+            var postDtos = _mapper.Map<List<PostDtoResponse>>(await _postRepository.GetPosts(subcategoryName));
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -63,15 +63,15 @@ namespace GoTravnikApi.Controllers
         [HttpPost]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult> AddPost([FromBody] PostDto postDto)
+        public async Task<ActionResult> AddPost([FromBody] PostDtoRequest postDtoRequest)
         {
-            if (postDto == null)
+            if (postDtoRequest == null)
                 return BadRequest(ModelState);
 
-            if(postDto.Location == null)
+            if(postDtoRequest.Location == null)
                 return BadRequest(ModelState);
 
-            if (!await _subcategoryRepository.SubcategoriesExist(postDto.Subcategories.Select(x => x.Name).ToList()))
+            if (!await _subcategoryRepository.SubcategoriesExist(postDtoRequest.Subcategories.Select(x => x.Name).ToList()))
             {
                 ModelState.AddModelError("error", "Subcategory does not exist in the database");
                 return StatusCode(400, ModelState);
@@ -82,13 +82,13 @@ namespace GoTravnikApi.Controllers
 
             List<Subcategory> subcategories = new List<Subcategory>();
 
-            foreach (var subcategoryDto in postDto.Subcategories)
+            foreach (var subcategoryDto in postDtoRequest.Subcategories)
             {
                 var subcategory = await _subcategoryRepository.GetSubcategory(subcategoryDto.Name);
                 subcategories.Add(subcategory);
             }
 
-            Post post = _mapper.Map<Post>(postDto);
+            Post post = _mapper.Map<Post>(postDtoRequest);
             post.Subcategories = subcategories;
             post.PostDate = DateTime.Now;
 
