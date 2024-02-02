@@ -8,53 +8,34 @@ namespace GoTravnikApi.Helper
     {
         public MappingProfiles() 
         {
-            CreateMap<Subcategory, SubcategoryDto>();
-            CreateMap<SubcategoryDto, Subcategory>();
+            CreateMap<Subcategory, SubcategoryDto>().ReverseMap();
 
-            CreateMap<Accommodation, AccommodationDtoResponse>();
-            CreateMap<AccommodationDtoResponse, Accommodation>();
-            CreateMap<Accommodation, AccommodationDtoRequest>();
-            CreateMap<AccommodationDtoRequest, Accommodation>();
+            CreateMap<Accommodation, AccommodationDtoResponse>().ReverseMap();
+            CreateMap<Accommodation, AccommodationDtoRequest>().ReverseMap();
 
-            CreateMap<RatingDtoResponse, Rating>();
-            CreateMap<Rating, RatingDtoResponse>();
-            CreateMap<RatingDtoRequest, Rating>();
-            CreateMap<Rating, RatingDtoRequest>();
+            CreateMap<Rating, RatingDtoResponse>().ReverseMap();
+            CreateMap<Rating, RatingDtoRequest>().ReverseMap();
 
-            CreateMap<TouristContent, TouristContentDtoResponse>();
-            CreateMap<TouristContentDtoResponse, TouristContent>();
-            CreateMap<TouristContent, TouristContentDtoRequest>();
-            CreateMap<TouristContentDtoRequest, TouristContent>();
+            CreateMap<TouristContent, TouristContentDtoResponse>().ReverseMap();
+            CreateMap<TouristContent, TouristContentDtoRequest>().ReverseMap();
 
-            CreateMap<Attraction, AttractionDtoResponse>();
-            CreateMap<AttractionDtoResponse, Attraction>();
-            CreateMap<Attraction, AttractionDtoRequest>();
-            CreateMap<AttractionDtoRequest, Attraction>();
+            CreateMap<Attraction, AttractionDtoResponse>().ReverseMap();
+            CreateMap<Attraction, AttractionDtoRequest>().ReverseMap();
 
-            CreateMap<Activity, ActivityDtoResponse>();
-            CreateMap<ActivityDtoResponse, Activity>();
-            CreateMap<Activity, ActivityDtoRequest>();
-            CreateMap<ActivityDtoRequest, Activity>();
+            CreateMap<Activity, ActivityDtoResponse>().ReverseMap();
+            CreateMap<Activity, ActivityDtoRequest>().ReverseMap();
 
-            CreateMap<Event, EventDtoResponse>();
-            CreateMap<EventDtoResponse, Event>();
-            CreateMap<Event, EventDtoRequest>();
-            CreateMap<EventDtoRequest, Event>();
+            CreateMap<Event, EventDtoResponse>().ReverseMap();
+            CreateMap<Event, EventDtoRequest>().ReverseMap();
 
-            CreateMap<FoodAndDrink, FoodAndDrinkDtoResponse>();
-            CreateMap<FoodAndDrinkDtoResponse, FoodAndDrink>();
-            CreateMap<FoodAndDrink, FoodAndDrinkDtoRequest>();
-            CreateMap<FoodAndDrinkDtoRequest, FoodAndDrink>();
+            CreateMap<FoodAndDrink, FoodAndDrinkDtoResponse>().ReverseMap();
+            CreateMap<FoodAndDrink, FoodAndDrinkDtoRequest>().ReverseMap();
 
-            CreateMap<Post, PostDtoResponse>();
-            CreateMap<PostDtoResponse, Post>();
-            CreateMap<Post, PostDtoRequest>();
-            CreateMap<PostDtoRequest, Post>();
+            CreateMap<Post, PostDtoResponse>().ReverseMap();
+            CreateMap<Post, PostDtoRequest>().ReverseMap();
 
-            CreateMap<Location, LocationDtoResponse>();
-            CreateMap<LocationDtoResponse, Location>();
-            CreateMap<Location, LocationDtoRequest>();
-            CreateMap<LocationDtoRequest, Location>();
+            CreateMap<Location, LocationDtoResponse>().ReverseMap();
+            CreateMap<Location, LocationDtoRequest>().ReverseMap();
         }
     }
 }
