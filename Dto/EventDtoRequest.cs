@@ -1,9 +1,17 @@
-﻿namespace GoTravnikApi.Dto
+﻿using GoTravnikApi.Validations;
+using System.ComponentModel.DataAnnotations;
+
+namespace GoTravnikApi.Dto
 {
     public class EventDtoRequest : TouristContentDtoRequest
     {
-        public DateTime startDate { get; set; }
-        public DateTime endDate { get; set; }
+        [Required(ErrorMessage = "Start date must be provided")]
+        [DataType(DataType.DateTime, ErrorMessage = "Start date is in invalid format")]
+        [StartDateBeforeEndDate]
+        public DateTime StartDate { get; set; }
+        [Required(ErrorMessage = "End date must be provided")]
+        [DataType(DataType.DateTime, ErrorMessage = "End date is in invalid format")]
+        public DateTime EndDate { get; set; }
 
         public EventDtoRequest()
         {
