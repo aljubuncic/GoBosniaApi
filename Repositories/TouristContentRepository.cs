@@ -1,36 +1,53 @@
 ﻿using GoTravnikApi.Data;
 using GoTravnikApi.Interfaces;
+using GoTravnikApi.IRepositories;
 using GoTravnikApi.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace GoTravnikApi.Repositories
 {
-    public class TouristContentRepository : ITouristContentRepository
+    public abstract class TouristContentRepository<Entity> : Repository<Entity>, ITouristContentRepository<Entity> where Entity : TouristContent
     {
         private readonly DataContext _dataContext;
-
-        public TouristContentRepository(DataContext dataContext)
+        public TouristContentRepository(DataContext dataContext) : base(dataContext)
         {
             _dataContext = dataContext;
         }
-        public async Task<TouristContent> GetTouristContent(int ratingId)
+
+        public async Task<List<Entity>> FilterBySubcategories(List<string> subcategoryNames)
         {
-            var accommodation = await _dataContext.Accommodation
-                .Where(accommodation => accommodation.Ratings.Any(r => r.Value == ratingId)).FirstOrDefaultAsync();
-            if (accommodation != null)
-                return accommodation;
+            var query = _dataContext.Set<Entity>().AsQueryable();
+            foreach (var subcategory in subcategoryNames)
+                query = query.Where(a => a.Subcategories.Any(sub => sub.Name == subcategory) == true);
+            return await query
+                .Include(x => x.Location)
+                .Include(x => x.Ratings)
+                .ToListAsync();
+        }
 
-            var foodAndDrink = await _dataContext.FoodAndDrink
-                .Where(foodAndDrink => foodAndDrink.Ratings.Any(r => r.Value == ratingId)).FirstOrDefaultAsync();
-            if (foodAndDrink != null)
-                return foodAndDrink;
+        public async Task<List<Entity>> GetByName(string name)
+        {
+            return await _dataContext.Set<Entity>()
+                .Where(a => a.Name.ToLower().Contains(name.ToLower()))
+                .Include(x => x.Location)
+                .Include(x => x.Ratings)
+                .ToListAsync();
+        }
 
-            var activity = await _dataContext.Activity
-                .Where(activity => activity.Ratings.Any(r => r.Value == ratingId)).FirstOrDefaultAsync();
-            if (activity != null) 
-                return activity;
+        public async Task<List<Entity>> Sort(string sortOption)
+        {
+            var query = _dataContext.Set<Entity>().AsQueryable();
 
-            return null;
+            if (sortOption == "alphabetical")
+                query = query.OrderBy(a => a.Name);
+
+            else if (sortOption == "popular")
+                query = query.OrderByDescending(a => a.Ratings.Select(r => r.Value).Average());
+
+            return await query
+                .Include(a => a.Location)
+                .Include(a => a.Ratings)
+                .ToListAsync();
         }
     }
 }
