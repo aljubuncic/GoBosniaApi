@@ -4,9 +4,9 @@
     {
         public Task<List<Entity>> GetAll();
         public Task<Entity?> GetById(int id);
-        public Task<bool> Add(Entity entity);
-        public Task<bool> Update(Entity entity);
-        public Task<bool> Delete(Entity entity);
-        public Task<bool> Save();
+        public Task<int> Add(Entity entity);
+        public Task<int> Update(Entity entity);
+        public Task Delete(Entity entity);
+        public Task Save();
     }
 }
