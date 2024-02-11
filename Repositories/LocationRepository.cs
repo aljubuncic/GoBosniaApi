@@ -1,28 +1,15 @@
 ﻿using GoTravnikApi.Data;
 using GoTravnikApi.Interfaces;
+using GoTravnikApi.IRepositories;
 using GoTravnikApi.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace GoTravnikApi.Repositories
 {
-    public class LocationRepository : ILocationRepository
+    public class LocationRepository : Repository<Location>, ILocationRepository
     {
-        private readonly DataContext _dataContext;
-
-        public LocationRepository(DataContext dataContext)
+        public LocationRepository(DataContext dataContext) : base(dataContext)
         {
-            _dataContext = dataContext;
-        }
-        public async Task<bool> AddLocation(Location location)
-        {
-            await _dataContext.AddAsync(location);
-            return await Save();
-        }
-
-        public async Task<bool> Save()
-        {
-            var saved = await _dataContext.SaveChangesAsync();
-            return saved > 0;
         }
     }
 }
