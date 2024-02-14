@@ -4,7 +4,7 @@ using GoTravnikApi.Models;
 using GoTravnikApi.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace GoTravnikApi.Repository
+namespace GoTravnikApi.Repositories
 {
     public class EventRepository : TouristContentRepository<Event>,IEventRepository
     {
