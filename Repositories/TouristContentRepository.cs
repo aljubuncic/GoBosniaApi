@@ -1,5 +1,4 @@
 ﻿using GoTravnikApi.Data;
-using GoTravnikApi.Interfaces;
 using GoTravnikApi.IRepositories;
 using GoTravnikApi.Models;
 using Microsoft.EntityFrameworkCore;

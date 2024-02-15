@@ -1,8 +1,6 @@
 ﻿using GoTravnikApi.Data;
-using GoTravnikApi.Interfaces;
 using GoTravnikApi.IRepositories;
 using GoTravnikApi.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace GoTravnikApi.Repositories
