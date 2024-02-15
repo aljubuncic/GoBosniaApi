@@ -10,7 +10,7 @@ namespace GoTravnikApi.Controllers
 {
     [Route("api/locations")]
     [ApiController]
-    public class LocationController : Controller
+    public class LocationController : ControllerBase
     {
         private readonly ILocationService _locationService;   
         public LocationController(ILocationService locationService)

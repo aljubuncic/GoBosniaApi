@@ -12,7 +12,7 @@ namespace GoTravnikApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public abstract class TouristContentController<TouristContentType, TouristContentRequestDtoType, TouristContentResponseDtoType> : Controller
+    public abstract class TouristContentController<TouristContentType, TouristContentRequestDtoType, TouristContentResponseDtoType> : ControllerBase
         where TouristContentType : TouristContent
         where TouristContentRequestDtoType : TouristContentDtoRequest
         where TouristContentResponseDtoType : TouristContentDtoResponse
