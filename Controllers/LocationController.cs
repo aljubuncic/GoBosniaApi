@@ -1,4 +1,7 @@
-﻿using GoTravnikApi.Interfaces;
+﻿using GoTravnikApi.Dto;
+using GoTravnikApi.Exceptions;
+
+using GoTravnikApi.IServices;
 using GoTravnikApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,22 +12,32 @@ namespace GoTravnikApi.Controllers
     [ApiController]
     public class LocationController : Controller
     {
-        private readonly ILocationRepository _locationRepository;   
-        public LocationController(ILocationRepository locationRepository)
+        private readonly ILocationService _locationService;   
+        public LocationController(ILocationService locationService)
         {
-            _locationRepository = locationRepository;
+            _locationService = locationService; 
         }
 
         [HttpPost]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult> AddLocation([FromBody] Location location)
+        public async Task<ActionResult> AddLocation([FromBody] LocationDtoRequest locationDtoRequest)
         {
-            if (location == null)
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            await _locationRepository.AddLocation(location);
-            return Ok("Successfully added");
+            try
+            {
+                var locationId = await _locationService.Add(locationDtoRequest);
+                return Created($"location/{locationId}", "Succesfully added");
+            }
+            catch (InternalServerErrorException ex) 
+            {
+                return Problem
+                    (statusCode: (int)ex.HttpStatusCode,
+                    title: "Internal Server Error",
+                    detail: ex.Message);
+            }
         }
     }
 }
