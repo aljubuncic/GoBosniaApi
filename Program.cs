@@ -1,10 +1,11 @@
 using GoTravnikApi.Data;
-using GoTravnikApi.Interfaces;
-using GoTravnikApi.Repositories;
-using GoTravnikApi.Repository;
+using GoTravnikApi.IRepositories;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using GoTravnikApi.Helper;
+using GoTravnikApi.Services;
+using GoTravnikApi.IServices;
+using GoTravnikApi.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,9 +18,19 @@ builder.Services.AddScoped<IAttractionRepository, AttractionRepository>();
 builder.Services.AddScoped<IFoodAndDrinkRepository, FoodAndDrinkRepository>();
 builder.Services.AddScoped<ILocationRepository, LocationRepository>();
 builder.Services.AddScoped<ISubcategoryRepository, SubcategoryRepository>();
-builder.Services.AddScoped<IRatingRepository, RatingRepository>();
-builder.Services.AddScoped<ITouristContentRepository, TouristContentRepository>();  
-builder.Services.AddScoped<IPostRepository, PostRepository>();  
+builder.Services.AddScoped<IRatingRepository, RatingRepository>(); 
+builder.Services.AddScoped<IPostRepository, PostRepository>();
+
+builder.Services.AddAutoMapper(typeof(MappingProfiles));
+builder.Services.AddScoped<IEventService, EventService>();
+builder.Services.AddScoped<IAccommodationService, AccommodationService>();
+builder.Services.AddScoped<IActivityService, ActivityService>();
+builder.Services.AddScoped<IAttractionService, AttractionService>();
+builder.Services.AddScoped<IFoodAndDrinkService, FoodAndDrinkService>();
+builder.Services.AddScoped<ILocationService, LocationService>();
+builder.Services.AddScoped<ISubcategoryService, SubcategoryService>();
+builder.Services.AddScoped<IRatingService, RatingService>();
+builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddControllers();
 builder.Services.AddCors(options =>
 {
