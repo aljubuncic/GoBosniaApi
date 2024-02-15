@@ -43,7 +43,7 @@ namespace GoTravnikApi.Services
 
         public async Task<int> AddRating(int id, RatingDtoRequest ratingDtoRequest)
         {
-            var touristContent = await _touristContentRepository.GetById(id) ?? throw new Exception($"Entity with {id} does not exist in the database");
+            var touristContent = await _touristContentRepository.GetById(id) ?? throw new Exception($"Entity with id \'{id}\' does not exist in the database");
             var rating = _mapper.Map<Rating>(ratingDtoRequest);
             touristContent.Ratings.Add(rating);
             try

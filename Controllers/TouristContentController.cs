@@ -119,5 +119,29 @@ namespace GoTravnikApi.Controllers
                     detail: ex.Message);
             }
         }
+
+        [HttpDelete("{id:int}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public async Task<ActionResult> Delete(int id)
+        {
+            try
+            {
+                await _touristContentService.Delete(id);
+                return Ok("Successfully deleted entity");
+            }
+            catch(NotFoundException ex) 
+            {
+                return NotFound(ex.Message);
+            }
+            catch(InternalServerErrorException ex)
+            {
+                return Problem
+                    (statusCode: (int)ex.HttpStatusCode,
+                    title: "Internal Server Error",
+                    detail: ex.Message);
+            }
+        }
     }
 }

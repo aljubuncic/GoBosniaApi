@@ -36,7 +36,7 @@ namespace GoTravnikApi.Services
 
         public async Task Delete(int id)
         {
-            var touristContent = await _repository.GetById(id) ?? throw new NotFoundException($"Entity with {id} does not exist in the database");
+            var touristContent = await _repository.GetById(id) ?? throw new NotFoundException($"Entity with id \'{id}\' does not exist in the database");
             try
             {
                 await _repository.Delete(touristContent);
@@ -55,7 +55,7 @@ namespace GoTravnikApi.Services
 
         public async Task<EntityResponseDto> GetById(int id)
         {
-            var touristContent = await _repository.GetById(id) ?? throw new NotFoundException($"Entity with {id} does not exist in the database");
+            var touristContent = await _repository.GetById(id) ?? throw new NotFoundException($"Entity with id \'{id}\' does not exist in the database");
             var touristContentDtoResponse = _mapper.Map<EntityResponseDto>(touristContent);
             return touristContentDtoResponse;
         }
