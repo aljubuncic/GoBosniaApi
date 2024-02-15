@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using GoTravnikApi.Dto;
-using GoTravnikApi.Interfaces;
+using GoTravnikApi.IServices;
 using GoTravnikApi.Models;
 using GoTravnikApi.Repositories;
 using Microsoft.AspNetCore.Http;
@@ -10,149 +10,41 @@ namespace GoTravnikApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccommodationController : Controller
+    public class AccommodationController 
+        : TouristContentController<Accommodation,AccommodationDtoRequest,AccommodationDtoResponse>
     {
-        private readonly IAccommodationRepository _accommodationRepository;
-        private readonly ISubcategoryRepository _subcategoryRepository;
-        private readonly IRatingRepository _ratingRepository;
-        private readonly IMapper _mapper;
-        public AccommodationController(IAccommodationRepository accommodationRepository, ISubcategoryRepository subcategoryRepository, IRatingRepository ratingRepository, IMapper mapper)
+        public IAccommodationService _accommodationService;
+        public ISubcategoryService _subcategoryService;
+        public IRatingService _ratingService;
+
+        public AccommodationController(IAccommodationService accommodationService, ISubcategoryService subcategoryService, IRatingService ratingService) 
+            : base(accommodationService, subcategoryService, ratingService)
         {
-            _accommodationRepository = accommodationRepository;
-            _subcategoryRepository = subcategoryRepository;
-            _ratingRepository = ratingRepository;
-            _mapper = mapper;
+            _accommodationService = accommodationService;
+            _subcategoryService = subcategoryService;
+            _ratingService = ratingService;
         }
 
-        [HttpGet]
-        [ProducesResponseType(200, Type = typeof(List<AccommodationDtoResponse>))]
-        public async Task<ActionResult<List<AccommodationDtoResponse>>> GetAccommodations()
-        {
-            var accommodationDtos =_mapper.Map<List<AccommodationDtoResponse>> (await _accommodationRepository.GetAccomodations());
-
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            return Ok(accommodationDtos);
-        }
-
-        [HttpGet("{id:int}")]
-        [ProducesResponseType(200, Type = typeof(AccommodationDtoResponse))]
-        [ProducesResponseType(404)]
-        public async Task<ActionResult<AccommodationDtoResponse>> GetAccommodation(int id)
-        {
-            if (!await _accommodationRepository.AccomodationExists(id))
-                return NotFound(ModelState);
-            var accommodationDto =_mapper.Map<AccommodationDtoResponse>(await _accommodationRepository.GetAccommodation(id));
-
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            return Ok(accommodationDto);
-        }
-
-        [HttpGet("{name}")]
-        [ProducesResponseType(200, Type = typeof(List<AccommodationDtoResponse>))]
-        public async Task<ActionResult<List<AccommodationDtoResponse>>> GetAccommodations(string name)
-        {
-            var accommodationDtos = _mapper.Map<List<AccommodationDtoResponse>>(await _accommodationRepository.GetAccomodations(name));
-
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            return Ok(accommodationDtos);
-        }
-
-        [HttpPost("filter/{sortOption}")]
+        [HttpGet("sort/{sortOption}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult<List<AccommodationDtoResponse>>> GetFilteredAndOrderedActivities([FromBody] List<string> subcategoryNames, string sortOption)
+        public async Task<ActionResult<List<AccommodationDtoResponse>>> GetSortedAccommodations(string sortOption)
         {
+            var accommodationResponseDtos = await _accommodationService.Sort(sortOption);
 
-            var accommodationDtos = _mapper.Map<List<AccommodationDtoResponse>>(await _accommodationRepository.FilterAndOrderAccommodations(subcategoryNames, sortOption));
-
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            return Ok(accommodationDtos);
+            return Ok(accommodationResponseDtos);
         }
 
-        [HttpPost]
+        [HttpGet("filter")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult> AddAccommodation([FromBody] AccommodationDtoRequest accommodationDtoRequest)
+        public async Task<ActionResult<List<AccommodationDtoResponse>>> GetFilteredAccommodations([FromQuery] List<string> subcategoryNames)
         {
-            if(accommodationDtoRequest == null)
-                return BadRequest(ModelState);
+            var accommodationResponseDtos = await _accommodationService.GetBySubcategories(subcategoryNames);
 
-            if (accommodationDtoRequest.Location == null)
-                return BadRequest(ModelState);
-
-            if(!await _subcategoryRepository.SubcategoriesExist(accommodationDtoRequest.Subcategories.Select(x => x.Name).ToList()))
-            {
-                ModelState.AddModelError("error", "Subcategory does not exist in the database");
-                return StatusCode(400, ModelState);
-            }
-                
-            if(!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            List<Subcategory> subcategories = new List<Subcategory>();
-
-            foreach(var subcategoryDto in accommodationDtoRequest.Subcategories)
-            {
-                var subcategory = await _subcategoryRepository.GetSubcategory(subcategoryDto.Name);
-                subcategories.Add(subcategory);
-            }
-            Accommodation accommodation = _mapper.Map<Accommodation>(accommodationDtoRequest);
-            accommodation.Subcategories = subcategories;
-
-            if (!await _accommodationRepository.AddAccommodation(accommodation))
-            { 
-                ModelState.AddModelError("error", "Database saving error");
-                return StatusCode(500, ModelState);
-            }
-
-            return Ok("Succesfully added");
-
+            return Ok(accommodationResponseDtos);
         }
 
-        [HttpPost("rating/{accommodationId:int}")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        public async Task<ActionResult> AddRating(int accommodationId, [FromBody] RatingDtoRequest ratingDtoRequest)
-        {
-            if (ratingDtoRequest == null)
-                return BadRequest(ModelState);
 
-            if(!await _accommodationRepository.AccomodationExists(accommodationId))
-            {
-                ModelState.AddModelError("error", "Accomoodation does not exist in the database");
-                return StatusCode(400, ModelState);
-            }
-
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var accommodation = await _accommodationRepository.GetAccommodation(accommodationId);
-            var rating = _mapper.Map<Rating>(ratingDtoRequest);
-
-            accommodation.Ratings.Add(rating);
-
-            if (!await _ratingRepository.AddRating(rating))
-            {
-                ModelState.AddModelError("error", "Database updating error");
-                return StatusCode(500, ModelState);
-            }
-
-            if (!await _accommodationRepository.UpdateAccommodation(accommodation))
-            {
-                ModelState.AddModelError("error", "Database updating error");
-                return StatusCode(500, ModelState);
-            }
-
-            return Ok("Successfully added");
-
-        }
     }
 }
