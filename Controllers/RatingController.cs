@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GoTravnikApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/ratings")]
     [ApiController]
     public class RatingController : ControllerBase
     {

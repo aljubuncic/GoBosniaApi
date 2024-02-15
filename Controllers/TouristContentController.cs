@@ -20,13 +20,13 @@ namespace GoTravnikApi.Controllers
         private readonly ITouristContentService<TouristContentType, TouristContentRequestDtoType, TouristContentResponseDtoType> _touristContentService;
         private readonly ISubcategoryService _subcategoryService;
         private readonly IRatingService _ratingService;
-        private readonly string touristContentTypeCamelCase;
-        public TouristContentController(ITouristContentService<TouristContentType, TouristContentRequestDtoType, TouristContentResponseDtoType> touristContentService, ISubcategoryService subcategoryService, IRatingService ratingService)
+        private readonly string _controllerRouteName;
+        public TouristContentController(ITouristContentService<TouristContentType, TouristContentRequestDtoType, TouristContentResponseDtoType> touristContentService, ISubcategoryService subcategoryService, IRatingService ratingService, string controllerRouteName)
         {
             _touristContentService = touristContentService;
             _subcategoryService = subcategoryService;
             _ratingService = ratingService;
-            touristContentTypeCamelCase = $"{char.ToLower(nameof(TouristContentType)[0])}{nameof(TouristContentType)[1..]}";
+            _controllerRouteName = controllerRouteName;
         }
         [HttpGet]
         [ProducesResponseType(200)]
@@ -75,7 +75,7 @@ namespace GoTravnikApi.Controllers
             try
             {
                 var touristContentId = await _touristContentService.Add(touristContentRequestDto);
-                return Created($"{touristContentTypeCamelCase}/{touristContentId}", "Successfully added entity");
+                return Created($"{_controllerRouteName}/{touristContentId}", "Successfully added entity");
             }
             catch(NotFoundException ex)
             {

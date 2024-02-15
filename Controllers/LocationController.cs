@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GoTravnikApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/locations")]
     [ApiController]
     public class LocationController : Controller
     {
@@ -29,7 +29,7 @@ namespace GoTravnikApi.Controllers
             try
             {
                 var locationId = await _locationService.Add(locationDtoRequest);
-                return Created($"location/{locationId}", "Succesfully added");
+                return Created($"locations/{locationId}", "Succesfully added");
             }
             catch (InternalServerErrorException ex) 
             {

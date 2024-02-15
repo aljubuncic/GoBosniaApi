@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GoTravnikApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/accommodations")]
     [ApiController]
     public class AccommodationController 
         : TouristContentController<Accommodation,AccommodationDtoRequest,AccommodationDtoResponse>
@@ -18,19 +18,19 @@ namespace GoTravnikApi.Controllers
         public IRatingService _ratingService;
 
         public AccommodationController(IAccommodationService accommodationService, ISubcategoryService subcategoryService, IRatingService ratingService) 
-            : base(accommodationService, subcategoryService, ratingService)
+            : base(accommodationService, subcategoryService, ratingService,"accommodations")
         {
             _accommodationService = accommodationService;
             _subcategoryService = subcategoryService;
             _ratingService = ratingService;
         }
 
-        [HttpGet("sort/{sortOption}")]
+        [HttpGet("sort/{sort_option}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult<List<AccommodationDtoResponse>>> GetSortedAccommodations(string sortOption)
+        public async Task<ActionResult<List<AccommodationDtoResponse>>> GetSortedAccommodations(string sort_option)
         {
-            var accommodationResponseDtos = await _accommodationService.Sort(sortOption);
+            var accommodationResponseDtos = await _accommodationService.Sort(sort_option);
 
             return Ok(accommodationResponseDtos);
         }
@@ -38,9 +38,9 @@ namespace GoTravnikApi.Controllers
         [HttpGet("filter")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult<List<AccommodationDtoResponse>>> GetFilteredAccommodations([FromQuery] List<string> subcategoryNames)
+        public async Task<ActionResult<List<AccommodationDtoResponse>>> GetFilteredAccommodations([FromQuery] List<string> subcategory_names)
         {
-            var accommodationResponseDtos = await _accommodationService.GetBySubcategories(subcategoryNames);
+            var accommodationResponseDtos = await _accommodationService.GetBySubcategories(subcategory_names);
 
             return Ok(accommodationResponseDtos);
         }

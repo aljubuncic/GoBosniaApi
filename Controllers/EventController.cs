@@ -11,14 +11,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GoTravnikApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/events")]
     [ApiController]
     public class EventController : TouristContentController<Event, EventDtoRequest,  EventDtoResponse>
     {
         private readonly IEventService _eventService;
         private readonly ISubcategoryService _subcategoryService;
 
-        public EventController(IEventService eventService, ISubcategoryService subcategoryService, IRatingService ratingService) : base(eventService, subcategoryService, ratingService)
+        public EventController(IEventService eventService, ISubcategoryService subcategoryService, IRatingService ratingService) 
+            : base(eventService, subcategoryService, ratingService, "events")
         {
             _eventService = eventService;
             _subcategoryService = subcategoryService;
@@ -37,9 +38,9 @@ namespace GoTravnikApi.Controllers
         [HttpGet("filter/subcategories")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult<List<EventDtoResponse>>> GetFilteredEventsBySubcategories([FromQuery] List<string> subcategoryNames)
+        public async Task<ActionResult<List<EventDtoResponse>>> GetFilteredEventsBySubcategories([FromQuery] List<string> subcategory_names)
         {
-            var eventDtoResponses = await _eventService.GetBySubcategories(subcategoryNames);
+            var eventDtoResponses = await _eventService.GetBySubcategories(subcategory_names);
 
             return Ok(eventDtoResponses);
         }

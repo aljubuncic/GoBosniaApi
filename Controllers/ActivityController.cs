@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GoTravnikApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/activities")]
     [ApiController]
     public class ActivityController : 
         TouristContentController<Activity, ActivityDtoRequest, ActivityDtoResponse>
@@ -20,19 +20,20 @@ namespace GoTravnikApi.Controllers
         private readonly ISubcategoryService _subcategoryService;
         private readonly IRatingService _ratingService;
 
-        public ActivityController(IActivityService activityService, ISubcategoryService subcategoryService, IRatingService ratingService) : base(activityService, subcategoryService, ratingService)
+        public ActivityController(IActivityService activityService, ISubcategoryService subcategoryService, IRatingService ratingService) 
+            : base(activityService, subcategoryService, ratingService, "activities")
         {
             _activityService = activityService;
             _subcategoryService = subcategoryService;
             _ratingService = ratingService;
         }
 
-        [HttpGet("sort/{sortOption}")]
+        [HttpGet("sort/{sort_option}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult<List<ActivityDtoResponse>>> GetSortedAccommodations(string sortOption)
+        public async Task<ActionResult<List<ActivityDtoResponse>>> GetSortedAccommodations(string sort_option)
         {
-            var activityResponseDtos = await _activityService.Sort(sortOption);
+            var activityResponseDtos = await _activityService.Sort(sort_option);
 
             return Ok(activityResponseDtos);
         }
@@ -40,9 +41,9 @@ namespace GoTravnikApi.Controllers
         [HttpGet("filter")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult<List<ActivityDtoResponse>>> GetFilteredAccommodations([FromQuery] List<string> subcategoryNames)
+        public async Task<ActionResult<List<ActivityDtoResponse>>> GetFilteredAccommodations([FromQuery] List<string> subcategory_names)
         {
-            var activityResponseDtos = await _activityService.GetBySubcategories(subcategoryNames);
+            var activityResponseDtos = await _activityService.GetBySubcategories(subcategory_names);
 
             return Ok(activityResponseDtos);
         }

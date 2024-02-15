@@ -10,7 +10,7 @@ using GoTravnikApi.IServices;
 
 namespace GoTravnikApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/posts")]
     [ApiController]
     public class PostController 
         : TouristContentController<Post, PostDtoRequest,  PostDtoResponse>
@@ -18,7 +18,8 @@ namespace GoTravnikApi.Controllers
         private readonly IPostService _postService;
         private readonly ISubcategoryService _subcategoryService;
 
-        public PostController(IPostService postService, ISubcategoryService subcategoryService, IRatingService ratingService) : base(postService, subcategoryService, ratingService)
+        public PostController(IPostService postService, ISubcategoryService subcategoryService, IRatingService ratingService) 
+            : base(postService, subcategoryService, ratingService, "posts")
         {
             _postService = postService;
             _subcategoryService = subcategoryService;

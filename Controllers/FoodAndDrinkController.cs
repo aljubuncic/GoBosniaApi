@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GoTravnikApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/food_and_drinks")]
     [ApiController]
     public class FoodAndDrinkController 
         : TouristContentController<FoodAndDrink, FoodAndDrinkDtoRequest, FoodAndDrinkDtoResponse>
@@ -19,7 +19,8 @@ namespace GoTravnikApi.Controllers
         private readonly ISubcategoryService _subcategoryService;
         private readonly IRatingService _ratingService;
 
-        public FoodAndDrinkController(IFoodAndDrinkService foodAndDrinkService, ISubcategoryService subcategoryService, IRatingService ratingService) : base(foodAndDrinkService, subcategoryService, ratingService)
+        public FoodAndDrinkController(IFoodAndDrinkService foodAndDrinkService, ISubcategoryService subcategoryService, IRatingService ratingService) 
+            : base(foodAndDrinkService, subcategoryService, ratingService, "food_and_drinks")
         {
             _foodAndDrinkService = foodAndDrinkService;
             _subcategoryService = subcategoryService;
@@ -29,19 +30,19 @@ namespace GoTravnikApi.Controllers
         [HttpGet("filter")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult<List<FoodAndDrinkDtoResponse>>> GetFilteredAndOrderedFoodAndDrinks([FromQuery] List<string> subcategoryNames)
+        public async Task<ActionResult<List<FoodAndDrinkDtoResponse>>> GetFilteredAndOrderedFoodAndDrinks([FromQuery] List<string> subcategory_names)
         {
-            var foodAndDrinkDtoResponses = await _foodAndDrinkService.GetBySubcategories(subcategoryNames);
+            var foodAndDrinkDtoResponses = await _foodAndDrinkService.GetBySubcategories(subcategory_names);
             
             return Ok(foodAndDrinkDtoResponses);
         }
 
-        [HttpGet("sort/{sortOption}")]
+        [HttpGet("sort/{sort_option}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult<List<FoodAndDrinkDtoResponse>>> GetFilteredAndOrderedFoodAndDrinks([FromQuery] string sortOption)
+        public async Task<ActionResult<List<FoodAndDrinkDtoResponse>>> GetFilteredAndOrderedFoodAndDrinks([FromQuery] string sort_option)
         {
-            var foodAndDrinkDtoResponses = await _foodAndDrinkService.Sort(sortOption);
+            var foodAndDrinkDtoResponses = await _foodAndDrinkService.Sort(sort_option);
 
             return Ok(foodAndDrinkDtoResponses);
         }
