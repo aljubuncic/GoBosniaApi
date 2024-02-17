@@ -27,7 +27,6 @@ namespace GoTravnikApi.Controllers
 
         [HttpGet("filter/date")]
         [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
         public async Task<ActionResult<List<EventDtoResponse>>> GetFilteredEventsByDate([FromQuery] DateTime start, [FromQuery] DateTime end)
         {
             var eventDtoResponses = await _eventService.GetByDateRange(start, end);
@@ -37,7 +36,6 @@ namespace GoTravnikApi.Controllers
 
         [HttpGet("filter/subcategories")]
         [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
         public async Task<ActionResult<List<EventDtoResponse>>> GetFilteredEventsBySubcategories([FromQuery] List<string> subcategory_names)
         {
             var eventDtoResponses = await _eventService.GetBySubcategories(subcategory_names);

@@ -29,7 +29,6 @@ namespace GoTravnikApi.Controllers
 
         [HttpGet("filter")]
         [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
         public async Task<ActionResult<List<FoodAndDrinkDtoResponse>>> GetFilteredAndOrderedFoodAndDrinks([FromQuery] List<string> subcategory_names)
         {
             var foodAndDrinkDtoResponses = await _foodAndDrinkService.GetBySubcategories(subcategory_names);
@@ -39,7 +38,6 @@ namespace GoTravnikApi.Controllers
 
         [HttpGet("sort/{sort_option}")]
         [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
         public async Task<ActionResult<List<FoodAndDrinkDtoResponse>>> GetFilteredAndOrderedFoodAndDrinks([FromQuery] string sort_option)
         {
             var foodAndDrinkDtoResponses = await _foodAndDrinkService.Sort(sort_option);

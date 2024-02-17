@@ -21,6 +21,7 @@ namespace GoTravnikApi.Controllers
         [HttpPost]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
         public async Task<ActionResult> AddLocation([FromBody] LocationDtoRequest locationDtoRequest)
         {
             if (!ModelState.IsValid)

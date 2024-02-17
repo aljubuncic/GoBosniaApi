@@ -22,7 +22,8 @@ namespace GoTravnikApi.Controllers
 
         [HttpPost("approve/{id:int}")]
         [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
         public async Task<ActionResult> ApproveRating(int id)
         {
             try
