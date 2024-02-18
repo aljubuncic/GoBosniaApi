@@ -122,36 +122,6 @@ namespace GoTravnikApi.Controllers
             }
 
         }
-
-        [HttpPost("rating/{id:int}")]
-        [ProducesResponseType(201)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(500)]
-        public async Task<ActionResult> AddRating(int id, [FromBody] RatingDtoRequest ratingDtoRequest)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            try
-            {
-                var ratingId = await _touristContentService.AddRating(id, ratingDtoRequest);
-
-                return Created($"rating/{ratingId}","Successfully added rating");
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (InternalServerErrorException ex)
-            {
-                return Problem
-                    (statusCode: (int)ex.HttpStatusCode,
-                    title: "Internal Server Error",
-                    detail: ex.Message);
-            }
-        }
-
         [HttpDelete("{id:int}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
