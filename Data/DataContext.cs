@@ -30,6 +30,9 @@ namespace GoTravnikApi.Data
             builder.Entity<Post>().ToTable(nameof(Post));
             builder.Entity<Rating>().ToTable(nameof(Rating));
             builder.Entity<Subcategory>().ToTable(nameof(Subcategory));
+            builder.Entity<Subcategory>()
+                .HasIndex(subcategory => subcategory.Name)
+                .IsUnique();
             base.OnModelCreating(builder);
         }
 
