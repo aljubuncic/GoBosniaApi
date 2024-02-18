@@ -2,7 +2,7 @@
 
 namespace GoTravnikApi.IRepositories
 {
-    public interface IActivityRepository : ITouristContentRepository<Activity>
+    public interface IActivityRepository : IRatedTouristContentRepository<Activity>
     {
     }
 }
