@@ -23,7 +23,6 @@ namespace GoTravnikApi.Repositories
                     query = query.Where(a => a.Subcategories.Any(sub => sub.Name == subcategory) == true);
                 return await query
                     .Include(x => x.Location)
-                    .Include(x => x.Ratings)
                     .ToListAsync();
             }
             catch (Exception ex)
@@ -39,7 +38,6 @@ namespace GoTravnikApi.Repositories
                 return await _dataContext.Set<Entity>()
                     .Where(a => a.Name.ToLower().Contains(name.ToLower()))
                     .Include(x => x.Location)
-                    .Include(x => x.Ratings)
                     .ToListAsync();
             }
             catch(Exception ex)
@@ -57,12 +55,8 @@ namespace GoTravnikApi.Repositories
                 if (sortOption == "alphabetical")
                     query = query.OrderBy(a => a.Name);
 
-                else if (sortOption == "popular")
-                    query = query.OrderByDescending(a => a.Ratings.Select(r => r.Value).Average());
-
                 return await query
                     .Include(a => a.Location)
-                    .Include(a => a.Ratings)
                     .ToListAsync();
             }
             catch(Exception ex)
