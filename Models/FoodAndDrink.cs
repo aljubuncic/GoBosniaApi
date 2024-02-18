@@ -4,25 +4,15 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace GoTravnikApi.Models
 {
-    public class FoodAndDrink : TouristContent
+    public class FoodAndDrink : ContactInformationRatedTouristContent
     {
-        
-        
-        public string Website { get; set; }
-        public string TelephoneNumber { get; set; }
         public FoodAndDrink()
         {
         }
 
-        public FoodAndDrink(int id, string name, string description, string type, Location location, string image, string website, string telephoneNumber)
+        public FoodAndDrink(int id, string name, string description, Location location, List<Image> images, List<Subcategory> subcatgeories, List<Rating> ratings, string? website, string telephoneNumber) 
+            : base(id, name, description, location, images, subcatgeories, ratings, website, telephoneNumber)
         {
-            Id = id;
-            Name = name;
-            Description = description;
-            Location = location;
-            Image = image;
-            Website = website;
-            TelephoneNumber = telephoneNumber;
         }
     }
 }

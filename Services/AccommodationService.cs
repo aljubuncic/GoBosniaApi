@@ -7,7 +7,7 @@ using GoTravnikApi.Models;
 namespace GoTravnikApi.Services
 {
     public class AccommodationService
-        : TouristContentService<Accommodation, AccommodationDtoRequest, AccommodationDtoResponse>, IAccommodationService
+        : RatedTouristContentService<Accommodation, AccommodationDtoRequest, AccommodationDtoResponse>, IAccommodationService
     {
         public AccommodationService(IAccommodationRepository accommodationRepository, ISubcategoryRepository subcategoryRepository, IMapper mapper) : base(accommodationRepository, subcategoryRepository, mapper)
         {

@@ -14,6 +14,5 @@ namespace GoTravnikApi.IServices
         public Task<List<EntityResponseDto>> GetBySubcategories(List<string> subcategoryNames);
         public Task<List<EntityResponseDto>> Sort(string sortOption);
         public new Task<int> Add(EntityRequestDto entityRequestDto);
-        public Task<int> AddRating(int id, RatingDtoRequest ratingDtoRequest);
     }
 }

@@ -7,21 +7,22 @@ namespace GoTravnikApi.Models
 
         [Key]
         public int Id { get; set; }
+        public string City { get; set; }
+        public string Address { get; set; }
         public double XCoordinate {  get; set; }
         public double YCoordinate { get; set; }
-
-        public string Address { get; set; }
 
         public Location()
         {
         }
 
-        public Location(int id, double xCoordinate, double yCoordinate, string address)
+        public Location(int id, string city, string address, double xCoordinate, double yCoordinate)
         {
             Id = id;
+            City = city;
+            Address = address;
             XCoordinate = xCoordinate;
             YCoordinate = yCoordinate;
-            Address = address;
         }
 
 

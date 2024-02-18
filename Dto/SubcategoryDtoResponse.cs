@@ -3,12 +3,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace GoTravnikApi.Dto
 {
-    public class SubcategoryDto
+    public class SubcategoryDtoResponse
     {
-        [Required(ErrorMessage = "Name of subcategory must be provided")]
         public string Name { get; set; }
 
-        public SubcategoryDto()
+        public SubcategoryDtoResponse()
         {
             
         }

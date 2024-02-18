@@ -20,13 +20,12 @@ namespace GoTravnikApi.Repositories
             {
             return await _dataContext.Event
                 .Where(e => e.StartDate >= startDate && e.EndDate <= endDate)
-                .Include(e => e.Ratings)
                 .Include(e => e.Location)
                 .ToListAsync();
             }
             catch(Exception ex)
             {
-                throw new InternalServerErrorException("Internal server error occured")
+                throw new InternalServerErrorException("Internal server error occured");
             }
         }
     }

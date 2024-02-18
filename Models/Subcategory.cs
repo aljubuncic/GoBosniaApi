@@ -1,5 +1,5 @@
 ﻿using GoTravnikApi.Dto;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -13,6 +13,13 @@ namespace GoTravnikApi.Models
         public List<TouristContent> TouristContents{ get; set; }
 
         public Subcategory() { }
+
+        public Subcategory(int id, string name, List<TouristContent> touristContents)
+        {
+            Id = id;
+            Name = name;
+            TouristContents = touristContents;
+        }
 
     }
 }

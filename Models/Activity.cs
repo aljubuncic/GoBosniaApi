@@ -3,20 +3,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace GoTravnikApi.Models
 {
-    public class Activity : TouristContent
+    public class Activity : RatedTouristContent
     {
-        
         public Activity()
         {
         }
 
-        public Activity(int id, string name, string description, Location location, string image)
+        public Activity(int id, string name, string description, Location location, List<Image> images, List<Subcategory> subcatgeories, List<Rating> ratings) 
+            : base(id, name, description, location, images, subcatgeories, ratings)
         {
-            Id = id;
-            Name = name;
-            Description = description;
-            Location = location;
-            Image = image;
         }
     }
 }

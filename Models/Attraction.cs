@@ -5,19 +5,13 @@ namespace GoTravnikApi.Models
 {
     public class Attraction : TouristContent
     {
-        
-
         public Attraction()
         {
         }
 
-        public Attraction(int id, string name, string description, string type, Location location, string image)
+        public Attraction(int id, string name, string description, Location location, List<Image> images, List<Subcategory> subcatgeories) 
+            : base(id, name, description, location, images, subcatgeories)
         {
-            Id = id;
-            Name = name;
-            Description = description;
-            Location = location;
-            Image = image;
         }
     }
 }

@@ -11,7 +11,7 @@ namespace GoTravnikApi.Controllers
     [Route("api/accommodations")]
     [ApiController]
     public class AccommodationController 
-        : TouristContentController<Accommodation,AccommodationDtoRequest,AccommodationDtoResponse>
+        : RatedTouristContentController<Accommodation,AccommodationDtoRequest,AccommodationDtoResponse>
     {
         public IAccommodationService _accommodationService;
         public ISubcategoryService _subcategoryService;

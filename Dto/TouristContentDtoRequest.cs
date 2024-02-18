@@ -12,10 +12,9 @@ namespace GoTravnikApi.Dto
         public LocationDtoRequest Location { get; set; }
         public string Image { get; set; }
         [MinLength(1,ErrorMessage = "There must be atleast one subcategory provided")]
-        public List<SubcategoryDto> Subcategories { get; set; }
+        public List<SubcategoryDtoRequest> Subcategories { get; set; }
         public TouristContentDtoRequest()
         {
-            
         }
     }
 }

@@ -3,7 +3,7 @@ using GoTravnikApi.Models;
 
 namespace GoTravnikApi.IServices
 {
-    public interface IActivityService : ITouristContentService<Activity, ActivityDtoRequest, ActivityDtoResponse>
+    public interface IActivityService : IRatedTouristContentService<Activity, ActivityDtoRequest, ActivityDtoResponse>
     {
     }
 }

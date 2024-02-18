@@ -1,12 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GoTravnikApi.Models
 {
     public class Rating
     {
+        [Key]
         public int Id { get; set; }
         public int Value { get; set; }
-        public string TextComment { get; set; }
+        public string? TextComment { get; set; }
         public DateTime PostDate { get; set; } = DateTime.Now;
         public bool Approved { get; set; } = false;
 

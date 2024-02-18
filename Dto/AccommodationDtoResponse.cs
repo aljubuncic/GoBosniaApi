@@ -1,6 +1,6 @@
 ﻿namespace GoTravnikApi.Dto
 {
-    public class AccommodationDtoResponse : TouristContentDtoResponse
+    public class AccommodationDtoResponse : RatedTouristContentDtoResponse
     {
         public string Website { get; set; }
         public string TelephoneNumber { get; set; }
