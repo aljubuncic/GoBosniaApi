@@ -1,6 +1,6 @@
 ﻿namespace GoTravnikApi.Dto
 {
-    public class ActivityDtoResponse : TouristContentDtoResponse
+    public class ActivityDtoResponse : RatedTouristContentDtoResponse
     {
         public ActivityDtoResponse()
         {
