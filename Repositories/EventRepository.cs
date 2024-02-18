@@ -1,4 +1,5 @@
 ﻿using GoTravnikApi.Data;
+using GoTravnikApi.Exceptions;
 using GoTravnikApi.IRepositories;
 using GoTravnikApi.Models;
 using Microsoft.EntityFrameworkCore;
@@ -15,11 +16,18 @@ namespace GoTravnikApi.Repositories
 
         public async Task<List<Event>> FilterByDate(DateTime startDate, DateTime endDate)
         {
+            try
+            {
             return await _dataContext.Event
                 .Where(e => e.StartDate >= startDate && e.EndDate <= endDate)
                 .Include(e => e.Ratings)
                 .Include(e => e.Location)
                 .ToListAsync();
+            }
+            catch(Exception ex)
+            {
+                throw new InternalServerErrorException("Internal server error occured")
+            }
         }
     }
 }

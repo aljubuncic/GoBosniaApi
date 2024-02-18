@@ -1,6 +1,7 @@
 ﻿using GoTravnikApi.Data;
 using GoTravnikApi.Exceptions;
 using GoTravnikApi.IRepositories;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace GoTravnikApi.Repositories
@@ -14,12 +15,26 @@ namespace GoTravnikApi.Repositories
         }
         public async Task<List<Entity>> GetAll()
         {
-            return await _dataContext.Set<Entity>().ToListAsync();
+            try
+            {
+                return await _dataContext.Set<Entity>().ToListAsync();
+            }
+            catch(Exception ex)
+            {
+                throw new InternalServerErrorException("Internal server error occured");
+            }
         }
 
         public Task<Entity?> GetById(int id)
         {
-            return _dataContext.Set<Entity>().SingleOrDefaultAsync();
+            try
+            {
+                return _dataContext.Set<Entity>().SingleOrDefaultAsync();
+            }
+            catch(Exception ex)
+            {
+                throw new InternalServerErrorException("Internal server error occured");
+            }
         }
         public async Task<int> Add(Entity entity)
         {
@@ -32,7 +47,7 @@ namespace GoTravnikApi.Repositories
                 var IdProperty = entity.GetType().GetProperty("Id").GetValue(entity, null);
                 return (int)IdProperty;
             }
-            catch(Exception)
+            catch(DbUpdateException)
             {
                 throw new InternalServerErrorException("Error while adding an entity in the database");
             }
@@ -46,9 +61,13 @@ namespace GoTravnikApi.Repositories
                 
                 await Save();
             }
-            catch (Exception)
+            catch (DbUpdateException)
             {
                 throw new InternalServerErrorException("Error while deleting an entity in the database");
+            }
+            catch(Exception ex)
+            {
+                throw new InternalServerErrorException(ex.Message);
             }
         }
 
@@ -63,16 +82,20 @@ namespace GoTravnikApi.Repositories
                 var IdProperty = entity.GetType().GetProperty("Id").GetValue(entity, null);
                 return (int)IdProperty;
             }
-            catch(Exception)
+            catch(DbUpdateException)
             {
                 throw new InternalServerErrorException("Error while updating an entity in the database");
+            }
+            catch (Exception ex)
+            {
+                throw new InternalServerErrorException("Internal server error occured");
             }
         }
         public async Task Save()
         {
             var saved  = await _dataContext.SaveChangesAsync();
             if (saved <= 0)
-                throw new Exception("Changes to the database have not been saved");
+                throw new DbUpdateException("Changes to the database have not been saved");
         }
     }
 }
