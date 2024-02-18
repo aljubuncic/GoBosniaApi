@@ -8,7 +8,8 @@ namespace GoTravnikApi.Helper
     {
         public MappingProfiles() 
         {
-            CreateMap<Subcategory, SubcategoryDto>().ReverseMap();
+            CreateMap<Subcategory, SubcategoryDtoRequest>().ReverseMap();
+            CreateMap<Subcategory, SubcategoryDtoResponse>().ReverseMap();
 
             CreateMap<Accommodation, AccommodationDtoResponse>().ReverseMap();
             CreateMap<Accommodation, AccommodationDtoRequest>().ReverseMap();
