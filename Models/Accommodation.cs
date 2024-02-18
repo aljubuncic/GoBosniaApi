@@ -5,24 +5,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GoTravnikApi.Models
 {
-    public class Accommodation : TouristContent
+    public class Accommodation : ContactInformationRatedTouristContent
     {
-        public string Website { get; set; }
-        public string TelephoneNumber { get; set; }
-
         public Accommodation()
         {
         }
-
-        public Accommodation(int id, string name, string description, string type, int idRating, Rating rating, Location location, string image, string website, string telephoneNumber)
+        public Accommodation(int id, string name, string description, Location location, List<Image> images, List<Subcategory> subcatgeories, List<Rating> ratings, string? website, string telephoneNumber) 
+            : base(id, name, description, location, images, subcatgeories, ratings, website, telephoneNumber)
         {
-            Id = id;
-            Name = name;
-            Description = description;
-            Location = location;
-            Image = image;
-            Website = website;
-            TelephoneNumber = telephoneNumber;
         }
     }
 }
