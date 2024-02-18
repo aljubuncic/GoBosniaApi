@@ -30,16 +30,29 @@ namespace GoTravnikApi.Controllers
         }
         [HttpGet]
         [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
         public async Task<ActionResult<List<TouristContentResponseDtoType>>> GetAll()
         {
-            var touristContentResponseDtos = await _touristContentService.GetAll();
+            try
+            {
+                var touristContentResponseDtos = await _touristContentService.GetAll();
 
-            return Ok(touristContentResponseDtos);
+                return Ok(touristContentResponseDtos);
+            }
+            catch(InternalServerErrorException ex)
+            {
+                return Problem
+                    (statusCode: (int)ex.HttpStatusCode,
+                    title: "Internal Server Error",
+                    detail: ex.Message);
+            }
+
         }
 
         [HttpGet("{id:int}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
         public async Task<ActionResult<TouristContentResponseDtoType>> GetById(int id)
         {
             try
@@ -52,15 +65,34 @@ namespace GoTravnikApi.Controllers
             {
                 return NotFound(ex.Message);
             }
+            catch(InternalServerErrorException ex)
+            {
+                return Problem
+                    (statusCode: (int)ex.HttpStatusCode,
+                    title: "Internal Server Error",
+                    detail: ex.Message);
+            }
         }
 
         [HttpGet("{name}")]
         [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
         public async Task<ActionResult<List<TouristContentResponseDtoType>>> GetByName(string name)
-        { 
-            var touristContentResponseDtos = await _touristContentService.GetByName(name);
+        {
+            try
+            {
+                var touristContentResponseDtos = await _touristContentService.GetByName(name);
 
-            return Ok(touristContentResponseDtos);
+                return Ok(touristContentResponseDtos);
+            }
+            catch(InternalServerErrorException ex)
+            {
+                return Problem
+                    (statusCode: (int)ex.HttpStatusCode,
+                    title: "Internal Server Error",
+                    detail: ex.Message);
+            }
+
         }
 
         [HttpPost]
