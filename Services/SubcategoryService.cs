@@ -16,14 +16,28 @@ namespace GoTravnikApi.Services
         }
         public async Task<SubcategoryDto> GetSubcategory(string name)
         {
-            var subcategory = await _subcategoryRepository.GetSubcategory(name) ?? throw new NotFoundException($"Subcategory with name {name} does not exist in the database");
-            var subcategoryResponseDto = _mapper.Map<SubcategoryDto>(subcategory);  
-            return subcategoryResponseDto;
+            try
+            {
+                var subcategory = await _subcategoryRepository.GetSubcategory(name) ?? throw new NotFoundException($"Subcategory with name {name} does not exist in the database");
+                var subcategoryResponseDto = _mapper.Map<SubcategoryDto>(subcategory);
+                return subcategoryResponseDto;
+            }
+            catch (InternalServerErrorException)
+            {
+                throw;
+            }
         }
 
         public async Task<bool> SubcategoriesExist(List<string> subcategoryNames)
         {
-            return await _subcategoryRepository.SubcategoriesExist(subcategoryNames);
+            try
+            {
+                return await _subcategoryRepository.SubcategoriesExist(subcategoryNames);
+            }
+            catch (InternalServerErrorException)
+            {
+                throw;
+            }
         }
     }
 }

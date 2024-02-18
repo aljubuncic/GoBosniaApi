@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using GoTravnikApi.Dto;
+using GoTravnikApi.Exceptions;
 using GoTravnikApi.IRepositories;
 using GoTravnikApi.IServices;
 using GoTravnikApi.Models;
@@ -22,8 +23,15 @@ namespace GoTravnikApi.Services
 
         public async Task<List<EventDtoResponse>> GetByDateRange(DateTime startDate, DateTime endDate)
         {
-            var eventResponseDtos = _mapper.Map<List<EventDtoResponse>>(await _eventRepository.FilterByDate(startDate, endDate));
-            return eventResponseDtos;
+            try
+            {
+                var eventResponseDtos = _mapper.Map<List<EventDtoResponse>>(await _eventRepository.FilterByDate(startDate, endDate));
+                return eventResponseDtos;
+            }
+            catch (InternalServerErrorException)
+            {
+                throw;
+            }
         }
     }
 }

@@ -49,15 +49,31 @@ namespace GoTravnikApi.Services
 
         public async Task<List<EntityResponseDto>> GetAll()
         {
-            var touristContentDtoResponses = _mapper.Map<List<EntityResponseDto>>(await _repository.GetAll());
-            return touristContentDtoResponses;
+            try
+            {
+                var touristContentDtoResponses = _mapper.Map<List<EntityResponseDto>>(await _repository.GetAll());
+
+                return touristContentDtoResponses;
+            }
+            catch(InternalServerErrorException)
+            {
+                throw;
+            }
+
         }
 
         public async Task<EntityResponseDto> GetById(int id)
         {
-            var touristContent = await _repository.GetById(id) ?? throw new NotFoundException($"Entity with id \'{id}\' does not exist in the database");
-            var touristContentDtoResponse = _mapper.Map<EntityResponseDto>(touristContent);
-            return touristContentDtoResponse;
+            try
+            {
+                var touristContent = await _repository.GetById(id) ?? throw new NotFoundException($"Entity with id \'{id}\' does not exist in the database");
+                var touristContentDtoResponse = _mapper.Map<EntityResponseDto>(touristContent);
+                return touristContentDtoResponse;
+            }
+            catch(InternalServerErrorException)
+            {
+                throw;
+            }
         }
     }
 }

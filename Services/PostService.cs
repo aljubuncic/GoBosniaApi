@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using GoTravnikApi.Dto;
+using GoTravnikApi.Exceptions;
 using GoTravnikApi.IRepositories;
 using GoTravnikApi.IServices;
 using GoTravnikApi.Models;
@@ -20,8 +21,15 @@ namespace GoTravnikApi.Services
 
         public async Task<List<PostDtoResponse>> GetBySubcategory(string subcategoryName)
         {
-            var postDtoResponses = _mapper.Map<List<PostDtoResponse>>(await _postRepository.GetBySubcategory(subcategoryName));
-            return postDtoResponses;
+            try
+            {
+                var postDtoResponses = _mapper.Map<List<PostDtoResponse>>(await _postRepository.GetBySubcategory(subcategoryName));
+                return postDtoResponses;
+            }
+            catch (InternalServerErrorException)
+            {
+                throw;
+            }
         }
     }
 }

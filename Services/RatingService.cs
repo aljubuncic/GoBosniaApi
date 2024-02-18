@@ -18,13 +18,20 @@ namespace GoTravnikApi.Services
 
         public async Task ApproveRating(int id)
         {
-            var rating = await _ratingRepository.GetById(id) ?? throw new NotFoundException("Entity does not exist in the database");
-            rating.Approved = true;
             try
             {
-                await _ratingRepository.Update(rating);
+                var rating = await _ratingRepository.GetById(id) ?? throw new NotFoundException("Entity does not exist in the database");
+                rating.Approved = true;
+                try
+                {
+                    await _ratingRepository.Update(rating);
+                }
+                catch (InternalServerErrorException)
+                {
+                    throw;
+                }
             }
-            catch(InternalServerErrorException) 
+            catch (InternalServerErrorException)
             {
                 throw;
             }
