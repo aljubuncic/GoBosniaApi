@@ -4,20 +4,15 @@ namespace GoTravnikApi.Models
 {
     public class Post : TouristContent
     {
-        public DateTime PostDate { get; set; }
+        public DateTime PostDate { get; set; } = DateTime.Now;
 
         public Post()
         {
         }
 
-        public Post(int id, string name, string description, string type, int idRating, Rating rating, Location location, string image, DateTime postDate)
+        public Post(int id, string name, string description, Location location, List<Image> images, List<Subcategory> subcatgeories) 
+            : base(id, name, description, location, images, subcatgeories)
         {
-            Id = id;
-            Name = name;
-            Description = description;
-            Location = location;
-            Image = image;
-            PostDate = postDate;
         }
     }
 }
