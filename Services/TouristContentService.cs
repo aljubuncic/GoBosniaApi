@@ -40,23 +40,6 @@ namespace GoTravnikApi.Services
                 throw;
             }
         }
-
-        public async Task<int> AddRating(int id, RatingDtoRequest ratingDtoRequest)
-        {
-            try
-            {
-                var touristContent = await _touristContentRepository.GetById(id) ?? throw new Exception($"Entity with id \'{id}\' does not exist in the database");
-                var rating = _mapper.Map<Rating>(ratingDtoRequest);
-                touristContent.Ratings.Add(rating);
-                await _touristContentRepository.Update(touristContent);
-                var ratingId = (await _touristContentRepository.GetById(id)).Ratings.OrderBy(x => x.Id).Last().Id; //maybe a better solution to be found?
-                return ratingId;
-            }
-            catch (InternalServerErrorException)
-            {
-                throw;
-            }
-        }
         public async Task<List<EntityResponseDto>> GetByName(string name)
         {
             try
