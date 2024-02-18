@@ -13,8 +13,8 @@ namespace GoTravnikApi.Controllers
 {
     [Route("api/activities")]
     [ApiController]
-    public class ActivityController : 
-        TouristContentController<Activity, ActivityDtoRequest, ActivityDtoResponse>
+    public class ActivityController  
+        : RatedTouristContentController<Activity, ActivityDtoRequest, ActivityDtoResponse>
     {
         private readonly IActivityService _activityService;
         private readonly ISubcategoryService _subcategoryService;

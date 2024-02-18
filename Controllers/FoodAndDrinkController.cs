@@ -13,7 +13,7 @@ namespace GoTravnikApi.Controllers
     [Route("api/food_and_drinks")]
     [ApiController]
     public class FoodAndDrinkController 
-        : TouristContentController<FoodAndDrink, FoodAndDrinkDtoRequest, FoodAndDrinkDtoResponse>
+        : RatedTouristContentController<FoodAndDrink, FoodAndDrinkDtoRequest, FoodAndDrinkDtoResponse>
     {
         private readonly IFoodAndDrinkService _foodAndDrinkService;
         private readonly ISubcategoryService _subcategoryService;
