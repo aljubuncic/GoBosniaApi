@@ -9,11 +9,9 @@ namespace GoTravnikApi.Dto
         public string Description { get; set; }
         public LocationDtoResponse Location { get; set; }
         public string Image { get; set; }
-        public List<SubcategoryDto> Subcategories { get; set; }
-        public List<Rating> Ratings { get; set; }
+        public List<SubcategoryDtoResponse> Subcategories { get; set; }
         public TouristContentDtoResponse()
         {
-            
         }
     }
 }
