@@ -7,19 +7,19 @@ using GoTravnikApi.Models;
 
 namespace GoTravnikApi.Services
 {
-    public class SubcategoryService : Service<Subcategory, SubcategoryDto, SubcategoryDto>, ISubcategoryService
+    public class SubcategoryService : Service<Subcategory, SubcategoryDtoRequest, SubcategoryDtoResponse>, ISubcategoryService
     {
         private readonly ISubcategoryRepository _subcategoryRepository;
         private readonly IMapper _mapper;
         public SubcategoryService(ISubcategoryRepository subcategoryRepository, IMapper mapper): base(subcategoryRepository,mapper)
         {
         }
-        public async Task<SubcategoryDto> GetSubcategory(string name)
+        public async Task<SubcategoryDtoResponse> GetSubcategory(string name)
         {
             try
             {
                 var subcategory = await _subcategoryRepository.GetSubcategory(name) ?? throw new NotFoundException($"Subcategory with name {name} does not exist in the database");
-                var subcategoryResponseDto = _mapper.Map<SubcategoryDto>(subcategory);
+                var subcategoryResponseDto = _mapper.Map<SubcategoryDtoResponse>(subcategory);
                 return subcategoryResponseDto;
             }
             catch (InternalServerErrorException)
