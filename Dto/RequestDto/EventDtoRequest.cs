@@ -1,7 +1,7 @@
 ﻿using GoTravnikApi.Validations;
 using System.ComponentModel.DataAnnotations;
 
-namespace GoTravnikApi.Dto
+namespace GoTravnikApi.Dto.RequestDto
 {
     public class EventDtoRequest : TouristContentDtoRequest
     {

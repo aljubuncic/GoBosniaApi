@@ -1,4 +1,4 @@
-﻿namespace GoTravnikApi.Dto
+﻿namespace GoTravnikApi.Dto.RequestDto
 {
     public class ActivityDtoRequest : RatedTouristContentDtoRequest
     {

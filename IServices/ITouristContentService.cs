@@ -1,4 +1,5 @@
-﻿using GoTravnikApi.Dto;
+﻿using GoTravnikApi.Dto.RequestDto;
+using GoTravnikApi.Dto.ResponseDto;
 using GoTravnikApi.Models;
 using Microsoft.AspNetCore.Mvc;
 

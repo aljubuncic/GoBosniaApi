@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using GoTravnikApi.Data;
-using GoTravnikApi.Dto;
-
+using GoTravnikApi.Dto.RequestDto;
+using GoTravnikApi.Dto.ResponseDto;
 using GoTravnikApi.IServices;
 using GoTravnikApi.Models;
 using GoTravnikApi.Repositories;

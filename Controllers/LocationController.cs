@@ -1,4 +1,4 @@
-﻿using GoTravnikApi.Dto;
+﻿using GoTravnikApi.Dto.RequestDto;
 using GoTravnikApi.Exceptions;
 
 using GoTravnikApi.IServices;

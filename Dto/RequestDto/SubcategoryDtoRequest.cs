@@ -1,7 +1,7 @@
 ﻿using GoTravnikApi.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace GoTravnikApi.Dto
+namespace GoTravnikApi.Dto.RequestDto
 {
     public class SubcategoryDtoRequest
     {
@@ -10,7 +10,7 @@ namespace GoTravnikApi.Dto
 
         public SubcategoryDtoRequest()
         {
-            
+
         }
     }
 }

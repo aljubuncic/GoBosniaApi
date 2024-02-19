@@ -1,4 +1,4 @@
-﻿namespace GoTravnikApi.Dto
+﻿namespace GoTravnikApi.Dto.ResponseDto
 {
     public class AttractionDtoResponse : TouristContentDtoResponse
     {

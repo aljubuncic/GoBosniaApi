@@ -1,6 +1,6 @@
 ﻿using GoTravnikApi.Models;
 
-namespace GoTravnikApi.Dto
+namespace GoTravnikApi.Dto.ResponseDto
 {
     public abstract class TouristContentDtoResponse
     {

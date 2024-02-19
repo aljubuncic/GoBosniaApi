@@ -1,5 +1,4 @@
-﻿using GoTravnikApi.Dto;
-using AutoMapper;
+﻿using AutoMapper;
 
 
 
@@ -7,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using GoTravnikApi.Models;
 using GoTravnikApi.IServices;
+using GoTravnikApi.Dto.RequestDto;
+using GoTravnikApi.Dto.ResponseDto;
 
 namespace GoTravnikApi.Controllers
 {
