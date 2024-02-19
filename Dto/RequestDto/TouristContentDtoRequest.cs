@@ -13,6 +13,8 @@ namespace GoTravnikApi.Dto.RequestDto
         public string Image { get; set; }
         [MinLength(1, ErrorMessage = "There must be atleast one subcategory provided")]
         public List<SubcategoryDtoRequest> Subcategories { get; set; }
+        [MinLength(1, ErrorMessage = "There must be atleast one image provided")]
+        public List<ImageDtoRequest> Images { get; set; }
         public TouristContentDtoRequest()
         {
         }

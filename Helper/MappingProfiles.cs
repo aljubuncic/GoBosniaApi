@@ -38,6 +38,9 @@ namespace GoTravnikApi.Helper
 
             CreateMap<Location, LocationDtoResponse>().ReverseMap();
             CreateMap<Location, LocationDtoRequest>().ReverseMap();
+
+            CreateMap<Image, ImageDtoResponse>().ReverseMap();  
+            CreateMap<Image, ImageDtoRequest>().ReverseMap();  
         }
     }
 }
