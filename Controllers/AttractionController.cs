@@ -23,16 +23,5 @@ namespace GoTravnikApi.Controllers
             _attractionService = attractionService;
             _subcategoryService = subcategoryService;
         }
-
-        [HttpGet("filter")]
-        [ProducesResponseType(200)]
-        public async Task<ActionResult<List<AttractionDtoResponse>>> GetFilteredAttractions([FromQuery] List<string> subcategory_names)
-        {
-
-            var attractionDtoResponses = await _attractionService.GetBySubcategories(subcategory_names);
-
-            return Ok(attractionDtoResponses);
-        }
-
     }
 }

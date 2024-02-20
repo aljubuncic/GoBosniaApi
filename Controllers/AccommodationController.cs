@@ -25,16 +25,5 @@ namespace GoTravnikApi.Controllers
             _subcategoryService = subcategoryService;
             _ratingService = ratingService;
         }
-
-        [HttpGet("filter")]
-        [ProducesResponseType(200)]
-        public async Task<ActionResult<List<AccommodationDtoResponse>>> GetFilteredAccommodations([FromQuery] List<string> subcategory_names)
-        {
-            var accommodationResponseDtos = await _accommodationService.GetBySubcategories(subcategory_names);
-
-            return Ok(accommodationResponseDtos);
-        }
-
-
     }
 }

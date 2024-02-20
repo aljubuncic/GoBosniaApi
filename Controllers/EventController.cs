@@ -33,14 +33,5 @@ namespace GoTravnikApi.Controllers
 
             return Ok(eventDtoResponses);
         }
-
-        [HttpGet("filter/subcategories")]
-        [ProducesResponseType(200)]
-        public async Task<ActionResult<List<EventDtoResponse>>> GetFilteredEventsBySubcategories([FromQuery] List<string> subcategory_names)
-        {
-            var eventDtoResponses = await _eventService.GetBySubcategories(subcategory_names);
-
-            return Ok(eventDtoResponses);
-        }
     }
 }

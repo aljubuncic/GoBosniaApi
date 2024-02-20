@@ -121,6 +121,26 @@ namespace GoTravnikApi.Controllers
             }
         }
 
+        [HttpGet("filter/subcategories")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
+        public async Task<ActionResult<List<AccommodationDtoResponse>>> GetFilteredBySubcategories([FromQuery] List<string> subcategory_names)
+        {
+            try
+            {
+                var touristContentResponseDtos = await _touristContentService.GetBySubcategories(subcategory_names);
+
+                return Ok(touristContentResponseDtos);
+            }
+            catch(InternalServerErrorException ex)
+            {
+                return Problem
+                    (statusCode: (int)ex.HttpStatusCode,
+                    title: "Internal Server Error",
+                    detail: ex.Message);
+            }
+        }
+
         [HttpPost]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
