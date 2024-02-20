@@ -6,6 +6,6 @@ namespace GoTravnikApi.IRepositories
     {
         public Task<List<Entity>> GetByName(string name);
         public Task<List<Entity>> FilterBySubcategories(List<string> subcategoryNames);
-        public Task<List<Entity>> Sort(string sortOption);
+        public Task<List<Entity>> SortByName(string sort_order);
     }
 }

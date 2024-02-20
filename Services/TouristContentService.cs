@@ -67,11 +67,11 @@ namespace GoTravnikApi.Services
             }
         }
 
-        public async Task<List<EntityResponseDto>> Sort(string sortOption)
+        public async Task<List<EntityResponseDto>> SortByName(string sortOrder)
         {
             try
             {
-                var touristContentDtoResponses = _mapper.Map<List<EntityResponseDto>>(await _touristContentRepository.Sort(sortOption));
+                var touristContentDtoResponses = _mapper.Map<List<EntityResponseDto>>(await _touristContentRepository.SortByName(sortOrder));
                 return touristContentDtoResponses;
             }
             catch (InternalServerErrorException)

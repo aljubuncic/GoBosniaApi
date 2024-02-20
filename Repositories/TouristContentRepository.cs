@@ -20,7 +20,7 @@ namespace GoTravnikApi.Repositories
             {
                 var query = _dataContext.Set<Entity>().AsQueryable();
                 foreach (var subcategory in subcategoryNames)
-                    query = query.Where(a => a.Subcategories.Any(sub => sub.Name == subcategory) == true);
+                    query = query.Where(x => x.Subcategories.Any(sub => sub.Name == subcategory) == true);
                 return await query
                     .Include(x => x.Location)
                     .ToListAsync();
@@ -46,17 +46,19 @@ namespace GoTravnikApi.Repositories
             }
         }
 
-        public async Task<List<Entity>> Sort(string sortOption)
+        public async Task<List<Entity>> SortByName(string sortOrder)
         {
             try
             {
                 var query = _dataContext.Set<Entity>().AsQueryable();
 
-                if (sortOption == "alphabetical")
-                    query = query.OrderBy(a => a.Name);
+                if(sortOrder == "asc" || sortOrder == "")
+                    query = query.OrderBy(x => x.Name);
+                else if(sortOrder == "desc")
+                    query = query.OrderByDescending(x => x.Name);
 
                 return await query
-                    .Include(a => a.Location)
+                    .Include(x => x.Location)
                     .ToListAsync();
             }
             catch(Exception ex)

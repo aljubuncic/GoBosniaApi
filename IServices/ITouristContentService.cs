@@ -13,7 +13,7 @@ namespace GoTravnikApi.IServices
     {
         public Task<List<EntityResponseDto>> GetByName(string name);
         public Task<List<EntityResponseDto>> GetBySubcategories(List<string> subcategoryNames);
-        public Task<List<EntityResponseDto>> Sort(string sortOption);
+        public Task<List<EntityResponseDto>> SortByName(string sortOrder);
         public new Task<int> Add(EntityRequestDto entityRequestDto);
     }
 }

@@ -35,14 +35,5 @@ namespace GoTravnikApi.Controllers
             
             return Ok(foodAndDrinkDtoResponses);
         }
-
-        [HttpGet("sort/{sort_option}")]
-        [ProducesResponseType(200)]
-        public async Task<ActionResult<List<FoodAndDrinkDtoResponse>>> GetFilteredAndOrderedFoodAndDrinks([FromQuery] string sort_option)
-        {
-            var foodAndDrinkDtoResponses = await _foodAndDrinkService.Sort(sort_option);
-
-            return Ok(foodAndDrinkDtoResponses);
-        }
     }
 }

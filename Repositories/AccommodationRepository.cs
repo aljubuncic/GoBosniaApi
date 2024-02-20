@@ -4,7 +4,7 @@ using GoTravnikApi.Models;
 
 namespace GoTravnikApi.Repositories
 {
-    public class AccommodationRepository : TouristContentRepository<Accommodation>, IAccommodationRepository
+    public class AccommodationRepository : RatedTouristContentRepository<Accommodation>, IAccommodationRepository
     {
         public AccommodationRepository(DataContext dataContext) : base(dataContext)
         {

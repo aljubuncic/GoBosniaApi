@@ -11,5 +11,6 @@ namespace GoTravnikApi.IServices
         where EntityResponseDto : TouristContentDtoResponse
     {
         public Task<int> AddRating(int id, RatingDtoRequest ratingDtoRequest);
+        public Task<List<EntityResponseDto>> SortByAverageRating(string sortOrder);
     }
 }

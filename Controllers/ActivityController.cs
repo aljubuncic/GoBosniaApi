@@ -28,15 +28,6 @@ namespace GoTravnikApi.Controllers
             _ratingService = ratingService;
         }
 
-        [HttpGet("sort/{sort_option}")]
-        [ProducesResponseType(200)]
-        public async Task<ActionResult<List<ActivityDtoResponse>>> GetSortedAccommodations(string sort_option)
-        {
-            var activityResponseDtos = await _activityService.Sort(sort_option);
-
-            return Ok(activityResponseDtos);
-        }
-
         [HttpGet("filter")]
         [ProducesResponseType(200)]
         public async Task<ActionResult<List<ActivityDtoResponse>>> GetFilteredAccommodations([FromQuery] List<string> subcategory_names)

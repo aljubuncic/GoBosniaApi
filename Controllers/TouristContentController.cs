@@ -96,6 +96,31 @@ namespace GoTravnikApi.Controllers
 
         }
 
+        [HttpGet("sort/name/{sort_order}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
+        public async Task<ActionResult<List<TouristContentDtoResponse>>> GetSortedByName(string sort_order)
+        {
+            if (sort_order != null && !sort_order.Equals("asc") && !sort_order.Equals("desc"))
+            {
+                return BadRequest("Sort order can only be \'asc\', \'desc\' or it can be ommited - (asc is default)");
+            }
+            try
+            {
+                var touristContentResponseDtos = await _touristContentService.SortByName(sort_order);
+
+                return Ok(touristContentResponseDtos);
+            }
+            catch (InternalServerErrorException ex)
+            {
+                return Problem
+                    (statusCode: (int)ex.HttpStatusCode,
+                    title: "Internal Server Error",
+                    detail: ex.Message);
+            }
+        }
+
         [HttpPost]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]

@@ -41,5 +41,17 @@ namespace GoTravnikApi.Services
                 throw;
             }
         }
+        public async Task<List<EntityResponseDto>> SortByAverageRating(string sortOrder)
+        {
+            try
+            {
+                var touristContentDtoResponses = _mapper.Map<List<EntityResponseDto>>(await _ratedTouristContentRepository.SortByAverageRating(sortOrder));
+                return touristContentDtoResponses;
+            }
+            catch (InternalServerErrorException)
+            {
+                throw;
+            }
+        }
     }
 }

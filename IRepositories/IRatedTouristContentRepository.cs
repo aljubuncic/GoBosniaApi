@@ -6,5 +6,6 @@ namespace GoTravnikApi.IRepositories
         : ITouristContentRepository<Entity> 
         where Entity: RatedTouristContent
     {
+        public Task<List<Entity>> SortByAverageRating(string sort_order);
     }
 }
