@@ -11,7 +11,9 @@ namespace GoTravnikApi.Models
         public string? TextComment { get; set; }
         public DateTime PostDate { get; set; } = DateTime.Now;
         public bool Approved { get; set; } = false;
-        public RatedTouristContent TouristContent { get; set; }
+        [ForeignKey(nameof(RatedTouristContent))]
+        public int RatedTouristContentId { get; set; }  
+        public RatedTouristContent RatedTouristContent { get; set; }
 
         public Rating() { }
 
@@ -20,7 +22,8 @@ namespace GoTravnikApi.Models
             Id = id;
             Value = value;
             TextComment = textComment;
-            TouristContent = ratedTouristContent;
+            RatedTouristContentId = ratedTouristContent.Id;
+            RatedTouristContent = ratedTouristContent;
         }
     }
 }
