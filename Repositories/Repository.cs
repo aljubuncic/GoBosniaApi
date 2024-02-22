@@ -13,25 +13,25 @@ namespace GoTravnikApi.Repositories
         {   
             _dataContext = dataContext;
         }
-        public async Task<List<Entity>> GetAll()
+        public virtual async Task<List<Entity>> GetAll()
         {
             try
             {
                 return await _dataContext.Set<Entity>().ToListAsync();
             }
-            catch(Exception ex)
+            catch(Exception)
             {
                 throw new InternalServerErrorException("Internal server error occured");
             }
         }
 
-        public Task<Entity?> GetById(int id)
+        public virtual async Task<Entity?> GetById(int id)
         {
             try
             {
-                return _dataContext.Set<Entity>().SingleOrDefaultAsync();
+                return await _dataContext.Set<Entity>().SingleOrDefaultAsync();
             }
-            catch(Exception ex)
+            catch(Exception)
             {
                 throw new InternalServerErrorException("Internal server error occured");
             }
@@ -51,6 +51,10 @@ namespace GoTravnikApi.Repositories
             {
                 throw new InternalServerErrorException("Error while adding an entity in the database");
             }
+            catch(Exception)
+            {
+                throw new InternalServerErrorException("Internal server error occured");
+            }
         }
 
         public async Task Delete(Entity entity)
@@ -65,9 +69,9 @@ namespace GoTravnikApi.Repositories
             {
                 throw new InternalServerErrorException("Error while deleting an entity in the database");
             }
-            catch(Exception ex)
+            catch(Exception)
             {
-                throw new InternalServerErrorException(ex.Message);
+                throw new InternalServerErrorException("Internal server error occured");
             }
         }
 
@@ -86,7 +90,7 @@ namespace GoTravnikApi.Repositories
             {
                 throw new InternalServerErrorException("Error while updating an entity in the database");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw new InternalServerErrorException("Internal server error occured");
             }
