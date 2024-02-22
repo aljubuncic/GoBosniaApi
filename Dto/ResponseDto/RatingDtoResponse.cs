@@ -7,7 +7,6 @@
         public string TextComment { get; set; }
         public DateTime PostDate { get; set; }
         public bool Approved { get; set; }
-        public RatedTouristContentDtoResponse TouristContent { get; set; }
         public RatingDtoResponse()
         {
         }
