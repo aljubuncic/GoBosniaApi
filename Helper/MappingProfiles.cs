@@ -16,6 +16,7 @@ namespace GoTravnikApi.Helper
             CreateMap<Accommodation, AccommodationDtoRequest>().ReverseMap();
 
             CreateMap<Rating, RatingDtoResponse>().ReverseMap();
+            CreateMap<Rating, RatingWithTouristContentDtoResponse>().ReverseMap();
             CreateMap<Rating, RatingDtoRequest>().ReverseMap();
 
             CreateMap<TouristContent, TouristContentDtoResponse>().ReverseMap();
