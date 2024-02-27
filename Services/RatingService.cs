@@ -15,6 +15,7 @@ namespace GoTravnikApi.Services
         public RatingService(IRatingRepository ratingRepository, IMapper mapper): base(ratingRepository, mapper)
         { 
             _ratingRepository = ratingRepository;   
+            _mapper = mapper;
         }
 
         public async Task ApproveRating(int id)
@@ -33,6 +34,20 @@ namespace GoTravnikApi.Services
                 }
             }
             catch (InternalServerErrorException)
+            {
+                throw;
+            }
+        }
+
+        public async Task<List<RatingWithTouristContentDtoResponse>> GetUnapproved()
+        {
+            try
+            {
+                var ratingWithTouristContentDtoResponses = _mapper.Map<List<RatingWithTouristContentDtoResponse>>(await _ratingRepository.GetUnapproved());
+
+                return ratingWithTouristContentDtoResponses;
+            }
+            catch(InternalServerErrorException)
             {
                 throw;
             }
