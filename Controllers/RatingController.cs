@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using GoTravnikApi.Dto;
+using GoTravnikApi.Dto.ResponseDto;
 using GoTravnikApi.Exceptions;
 
 using GoTravnikApi.IServices;
@@ -19,6 +20,27 @@ namespace GoTravnikApi.Controllers
         {
             _ratingService = ratingService;
         }
+
+        [HttpGet("unapproved")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
+        public async Task<ActionResult<List<RatingWithTouristContentDtoResponse>>> GetUnapproved()
+        {
+            try
+            {
+                var ratingWithTouristContentDtoResponses = await _ratingService.GetUnapproved();
+
+                return Ok(ratingWithTouristContentDtoResponses);
+            }
+            catch (InternalServerErrorException ex)
+            {
+                return Problem
+                    (statusCode: (int)ex.HttpStatusCode,
+                    title: "Internal Server Error",
+                    detail: ex.Message);
+            }
+        }
+
 
         [HttpPost("approve/{id:int}")]
         [ProducesResponseType(200)]
@@ -44,33 +66,5 @@ namespace GoTravnikApi.Controllers
             }
 
         }
-
-        /*
-        [HttpGet]
-        [ProducesResponseType(200, Type = typeof(List<RatingDtoResponse>))]
-        public async Task<ActionResult<List<RatingDtoResponse>>> GetRatings() 
-        {
-            var ratingDtos = _mapper.Map<List<RatingDtoResponse>>(await _ratingRepository.GetRatings());
-
-            foreach(var ratingDto in ratingDtos)
-            {
-                var touristContent = await _touristContentRepository.GetTouristContent(ratingDto.Id);
-                if (touristContent is Accommodation)
-                    ratingDto.TouristContent = _mapper.Map<AccommodationDtoResponse>(touristContent);
-                else if (touristContent is FoodAndDrink)
-                    ratingDto.TouristContent = _mapper.Map<FoodAndDrinkDtoResponse>(touristContent);
-                else if (touristContent is Activity)
-                    ratingDto.TouristContent = _mapper.Map<ActivityDtoResponse>(touristContent);
-                else
-                    continue;
-            }
-
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState); 
-            
-            return Ok(ratingDtos);  
-        }
-        */
-
     }
 }
