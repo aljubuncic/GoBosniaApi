@@ -7,13 +7,15 @@ namespace GoTravnikApi.Models
         [Key]
         public int Id { get; set; }
         public string Url { get; set; }
+        public TouristContent TouristContent { get; set; } 
         public Image()
         {
         }
-        public Image(int id, string url)
+        public Image(int id, string url, TouristContent touristContent)
         {
             Id = id;
             Url = url;
+            TouristContent = touristContent;    
         }    
     }
 }
