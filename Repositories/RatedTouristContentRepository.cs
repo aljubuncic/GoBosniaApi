@@ -102,12 +102,15 @@ namespace GoTravnikApi.Repositories
                     .Include(x => x.Ratings.Where(r => r.Approved).ToList())
                     .AsQueryable();
 
-                if (sortOrder == "asc" || sortOrder == "")
-                    query = query.OrderBy(x => x.Ratings.Average(r => r.Value));
-                else if (sortOrder == "desc")
-                    query = query.OrderByDescending(x => x.Ratings.Average(r => r.Value));
+                var entitesWithApprovedRatings = await GetEntitiesWithApprovedRatings(query);
 
-                return await GetEntitiesWithApprovedRatings(query);
+                if (sortOrder == "asc" || sortOrder == "")
+                    entitesWithApprovedRatings = (List<Entity>)entitesWithApprovedRatings.OrderBy(x => x.Ratings.Average(r => r.Value));
+                else if (sortOrder == "desc")
+                    entitesWithApprovedRatings = (List<Entity>)entitesWithApprovedRatings.OrderByDescending(x => x.Ratings.Average(r => r.Value));
+
+                return entitesWithApprovedRatings;
+
             }
             catch (Exception)
             {
@@ -115,26 +118,24 @@ namespace GoTravnikApi.Repositories
             }
         }
 
-        private async Task<List<Entity>> GetEntitiesWithApprovedRatings(IQueryable<Entity> notFilteredRatingEntities)
+        private async Task<List<Entity>> GetEntitiesWithApprovedRatings(IQueryable<Entity> notFilteredRatingsEntities)
         {
-            return await notFilteredRatingEntities
-            .Include(x => x.Location)
-            .Include(x => x.Subcategories)
-            .Select(x => new
-            {
-                Entity = x,
-                ApprovedRatings = x.Ratings.Where(r => r.Approved).ToList()
-            })
-            .ToListAsync()
-            .ContinueWith(task =>
-            {
-                var entitiesWithFilteredRatings = task.Result.Select(x =>
+            var entitiesWithFilteredRatings = await notFilteredRatingsEntities
+                .Include(x => x.Location)
+                .Include(x => x.Subcategories)
+                .Select(x => new
                 {
-                    x.Entity.Ratings = x.ApprovedRatings;
-                    return x.Entity;
-                }).ToList();
-                return entitiesWithFilteredRatings;
-            });
+                    Entity = x,
+                    ApprovedRatings = x.Ratings.Where(r => r.Approved).ToList()
+                })
+                .ToListAsync();
+
+            foreach (var item in entitiesWithFilteredRatings)
+            {
+                item.Entity.Ratings = item.ApprovedRatings;
+            }
+
+            return entitiesWithFilteredRatings.Select(x => x.Entity).ToList();
         }
     }
 }
