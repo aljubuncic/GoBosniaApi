@@ -21,7 +21,6 @@ builder.Services.AddScoped<ISubcategoryRepository, SubcategoryRepository>();
 builder.Services.AddScoped<IRatingRepository, RatingRepository>(); 
 builder.Services.AddScoped<IPostRepository, PostRepository>();
 
-builder.Services.AddAutoMapper(typeof(MappingProfiles));
 builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddScoped<IAccommodationService, AccommodationService>();
 builder.Services.AddScoped<IActivityService, ActivityService>();
@@ -31,6 +30,7 @@ builder.Services.AddScoped<ILocationService, LocationService>();
 builder.Services.AddScoped<ISubcategoryService, SubcategoryService>();
 builder.Services.AddScoped<IRatingService, RatingService>();
 builder.Services.AddScoped<IPostService, PostService>();
+
 builder.Services.AddControllers();
 builder.Services.AddCors(options =>
 {
@@ -50,6 +50,21 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+if (args.Length == 1 && args[0].ToLower() == "seeddata")
+    await SeedDatabase(app);
+
+async Task SeedDatabase(IHost app)
+{
+    var scopedFactory = app.Services.GetService<IServiceScopeFactory>();
+
+    using (var scope = scopedFactory.CreateScope())
+    {
+        var dataContext = scope.ServiceProvider.GetService<DataContext>();
+        await SeedData.Initialize(dataContext);
+    }
+}
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
