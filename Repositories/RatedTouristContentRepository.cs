@@ -20,15 +20,11 @@ namespace GoTravnikApi.Repositories
         {
             try
             {
-                return await _dataContext.Set<Entity>()
-                    .Include(x => x.Ratings.Where(r => r.Approved).ToList())
-                    .Include(x => x.Location)
-                    .Include(x => x.Subcategories)
-                    .ToListAsync();
+                return await GetEntitiesWithApprovedRatings(_dataContext.Set<Entity>().AsQueryable());
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw new InternalServerErrorException("Internal server error occured");
+                throw new InternalServerErrorException(ex.Message);
             }
         }
 
@@ -36,11 +32,8 @@ namespace GoTravnikApi.Repositories
         {
             try
             {
-                return await _dataContext.Set<Entity>()
-                    .Include(x => x.Ratings.Where(r => r.Approved).ToList())
-                    .Include(x => x.Location)
-                    .Include(x => x.Subcategories)
-                    .SingleOrDefaultAsync();
+                return (await GetEntitiesWithApprovedRatings(_dataContext.Set<Entity>().AsQueryable()))
+                    .SingleOrDefault(x => x.Id == id);
             }
             catch (Exception)
             {
@@ -57,10 +50,8 @@ namespace GoTravnikApi.Repositories
                     .AsQueryable();
                 foreach (var subcategory in subcategoryNames)
                     query = query.Where(x => x.Subcategories.Any(sub => sub.Name == subcategory) == true);
-                return await query
-                    .Include(x => x.Ratings.Where(r => r.Approved).ToList())
-                    .Include(x => x.Location)
-                    .ToListAsync();
+
+                return await GetEntitiesWithApprovedRatings(query); 
             }
             catch (Exception)
             {
@@ -72,12 +63,11 @@ namespace GoTravnikApi.Repositories
         {
             try
             {
-                return await _dataContext.Set<Entity>()
-                    .Where(a => a.Name.ToLower().Contains(name.ToLower()))
-                    .Include(x => x.Ratings.Where(r => r.Approved).ToList())
-                    .Include(x => x.Location)
-                    .Include(x => x.Subcategories)
-                    .ToListAsync();
+                var query = _dataContext.Set<Entity>()
+                    .Where(a => a.Name.ToLower().Contains(name.ToLower())).AsQueryable();
+
+                return await GetEntitiesWithApprovedRatings(query);
+                    
             }
             catch (Exception)
             {
@@ -96,11 +86,7 @@ namespace GoTravnikApi.Repositories
                 else if (sortOrder == "desc")
                     query = query.OrderByDescending(x => x.Name);
 
-                return await query
-                    .Include(x => x.Ratings.Where(r => r.Approved).ToList())
-                    .Include(x => x.Location)
-                    .Include(x => x.Subcategories)
-                    .ToListAsync();
+                return await GetEntitiesWithApprovedRatings(query);
             }
             catch (Exception)
             {
@@ -121,15 +107,34 @@ namespace GoTravnikApi.Repositories
                 else if (sortOrder == "desc")
                     query = query.OrderByDescending(x => x.Ratings.Average(r => r.Value));
 
-                return await query
-                    .Include(x => x.Location)
-                    .Include(x => x.Subcategories)
-                    .ToListAsync();
+                return await GetEntitiesWithApprovedRatings(query);
             }
             catch (Exception)
             {
                 throw new InternalServerErrorException("Internal server error occured");
             }
+        }
+
+        private async Task<List<Entity>> GetEntitiesWithApprovedRatings(IQueryable<Entity> notFilteredRatingEntities)
+        {
+            return await notFilteredRatingEntities
+            .Include(x => x.Location)
+            .Include(x => x.Subcategories)
+            .Select(x => new
+            {
+                Entity = x,
+                ApprovedRatings = x.Ratings.Where(r => r.Approved).ToList()
+            })
+            .ToListAsync()
+            .ContinueWith(task =>
+            {
+                var entitiesWithFilteredRatings = task.Result.Select(x =>
+                {
+                    x.Entity.Ratings = x.ApprovedRatings;
+                    return x.Entity;
+                }).ToList();
+                return entitiesWithFilteredRatings;
+            });
         }
     }
 }
