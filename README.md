@@ -94,8 +94,15 @@ Before you begin, ensure you have the following installed:
     ```bash
     dotnet run
     ```
+    
+    If you want to populate the database with some example data, run this command:
 
-4. Viewing the API
+    ```bash
+    dotnet run seed-data
+    ```
+   
+
+5. Viewing the API
 
    Server is now hosted on https://localhost:7142
 
